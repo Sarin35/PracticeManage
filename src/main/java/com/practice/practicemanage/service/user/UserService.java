@@ -15,13 +15,13 @@ public class UserService implements IUserService {
     UserRepository userRepository;
 
     @Override
-    public void add(UserDto user) {
+    public User add(UserDto user) {
 
         User userPojo = new User();
 
         BeanUtils.copyProperties(user, userPojo);
 
-        userRepository.save(userPojo);
+        return userRepository.save(userPojo);
 //        调用数据访问类
     }
 }

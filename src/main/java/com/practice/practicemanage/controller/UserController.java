@@ -1,5 +1,6 @@
 package com.practice.practicemanage.controller;
 
+import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.user.IUserService;
@@ -21,8 +22,8 @@ public class UserController {
 
     @PostMapping("/test")
     public ResponseMessage<Object> testMapping(@RequestBody UserDto user){
-        userService.add(user);
-        return ResponseMessage.success(null, null);
+        User userPojo = userService.add(user);
+        return ResponseMessage.success(null, userPojo);
     }
 
 }
