@@ -1,7 +1,8 @@
 package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.pojo.dto.UserDto;
-import com.practice.practicemanage.service.IUserService;
+import com.practice.practicemanage.response.ResponseMessage;
+import com.practice.practicemanage.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,9 @@ public class UserController {
     IUserService userService;
 
     @PostMapping("/test")
-    public String testMapping(@RequestBody UserDto user){
+    public ResponseMessage<Object> testMapping(@RequestBody UserDto user){
         userService.add(user);
-        return "testOk";
+        return ResponseMessage.success(null, null);
     }
 
 }

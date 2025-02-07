@@ -1,7 +1,11 @@
 package com.practice.practicemanage.pojo;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "student_info")
 public class StudentInfo {
@@ -33,77 +37,5 @@ public class StudentInfo {
 
     @Column(name = "status", nullable = false)
     private Byte status;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStudentNumber() {
-        return studentNumber;
-    }
-
-    public void setStudentNumber(String studentNumber) {
-        this.studentNumber = studentNumber;
-    }
-
-    public String getSchool() {
-        return school;
-    }
-
-    public void setSchool(String school) {
-        this.school = school;
-    }
-
-    public String getTeacherPhone() {
-        return teacherPhone;
-    }
-
-    public void setTeacherPhone(String teacherPhone) {
-        this.teacherPhone = teacherPhone;
-    }
-
-    public String getUnitName() {
-        return unitName;
-    }
-
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
-    }
-
-    public String getStudentBatch() {
-        return studentBatch;
-    }
-
-    public void setStudentBatch(String studentBatch) {
-        this.studentBatch = studentBatch;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
 
 }
