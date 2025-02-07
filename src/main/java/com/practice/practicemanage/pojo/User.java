@@ -11,10 +11,10 @@ public class User {
     private Integer id;
 
     @Column(name = "username", length = 100)
-    private String username;
+    private String userName;
 
     @Column(name = "password", length = 100)
-    private String password;
+    private String passWord;
 
     @Column(name = "phone", length = 20)
     private String phone;
@@ -30,20 +30,20 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String username) {
+        this.userName = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPassWord() {
+        return passWord;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassWord(String password) {
+        this.passWord = password;
     }
 
     public String getPhone() {
