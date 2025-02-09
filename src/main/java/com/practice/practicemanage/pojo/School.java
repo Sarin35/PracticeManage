@@ -3,9 +3,11 @@ package com.practice.practicemanage.pojo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @Entity
 @Table(name = "schools")
 public class School {

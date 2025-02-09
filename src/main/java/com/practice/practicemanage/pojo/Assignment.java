@@ -3,11 +3,13 @@ package com.practice.practicemanage.pojo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
 @Setter
 @Getter
+@ToString
 @Entity
 @Table(name = "assignments")
 public class Assignment {

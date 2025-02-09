@@ -41,6 +41,21 @@ public class ResponseMessage <T> {
     }
 
     /**
+     * 构建成功响应 2
+     * @param message 消息
+     * @param <T> 泛型数据类型
+     * @return ResponseMessage
+     */
+    public static <T> ResponseMessage<T> success(String message){
+        return new ResponseMessage<>(
+                HttpStatus.OK.value(),
+                message != null ? message : "操作成功",
+                null,
+                true
+        );
+    }
+
+    /**
      * 构建失败响应
      * @param message 错误消息
      * @param <T> 泛型数据类型
