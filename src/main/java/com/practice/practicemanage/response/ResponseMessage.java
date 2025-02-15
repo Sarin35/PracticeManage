@@ -1,6 +1,6 @@
 package com.practice.practicemanage.response;
 
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,6 +51,21 @@ public class ResponseMessage <T> {
                 HttpStatus.OK.value(),
                 message != null ? message : "操作成功",
                 null,
+                true
+        );
+    }
+
+    /**
+     * 构建成功响应 3
+     * @param data 数据
+     * @param <T> 泛型数据类型
+     * @return ResponseMessage
+     */
+    public static <T> ResponseMessage<T> success(T data){
+        return new ResponseMessage<>(
+                HttpStatus.OK.value(),
+                "操作成功",
+                data,
                 true
         );
     }

@@ -11,9 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+
+    /**
+     * 根据用户名查询用户
+     */
+//    这两个注解是为了让这个方法支持事务，用于修改数据
     @Transactional
     @Query("update User u set u.status = 0 where u.id = :id")
     @Modifying
-    int updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
+    void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
 
 }

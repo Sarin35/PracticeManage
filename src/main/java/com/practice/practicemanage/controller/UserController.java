@@ -5,6 +5,7 @@ import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.user.IUserService;
+import com.practice.practicemanage.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,26 +22,48 @@ public class UserController {
 //    测试
     @Autowired
     IUserService userService;
+    @Autowired
+    LogUtil logUtil;
 
     @PostMapping("/test")
     public ResponseMessage<Object> testPostMapping(@Validated @RequestBody UserDto user){
-        User userPojo = userService.add(user);
-        return ResponseMessage.success(null, userPojo);
+        try {
+            User userPojo = userService.add(user);
+            return ResponseMessage.success(userPojo);
+        } catch (Exception e) {
+            logUtil.error(UserController.class, "插入用户失败", e);
+            return ResponseMessage.error("插入用户失败");
+        }
     }
     @GetMapping("/{userId}")
-    public ResponseMessage testGetMaping(@PathVariable Integer userId){
-        User userPojo = userService.getById(userId);
-        return ResponseMessage.success(null, userPojo);
+    public ResponseMessage<Object> testGetMaping(@PathVariable Integer userId){
+        try {
+            User user = userService.getById(userId);
+            return ResponseMessage.success(user);
+        } catch (Exception e) {
+            logUtil.error(UserController.class, "根据id查询用户失败", e);
+            return ResponseMessage.error("根据id查询用户失败");
+        }
     }
     @PutMapping("/testPut")
-    public ResponseMessage testPutMapping(@Validated @RequestBody UserIdDto user){
-        User userPojo = userService.edit(user);
-        return ResponseMessage.success(null, userPojo);
+    public ResponseMessage<Object> testPutMapping(@Validated @RequestBody UserIdDto user){
+        try {
+            User userPojo = userService.edit(user);
+            return ResponseMessage.success(null, userPojo);
+        } catch (Exception e) {
+            logUtil.error(UserController.class, "修改用户失败", e);
+            return ResponseMessage.error("修改用户失败");
+        }
     }
     @DeleteMapping("/testDelete/{userId}")
-    public ResponseMessage testDeleteMapping(@PathVariable Integer userId){
-        int updateCount = userService.updataById(userId);
-        return ResponseMessage.success("更改数据条目：", updateCount);
+    public ResponseMessage<Object> testDeleteMapping(@PathVariable Integer userId){
+        try {
+            userService.updataById(userId);
+            return ResponseMessage.success("删除用户成功");
+        } catch (Exception e) {
+            logUtil.error(UserController.class, "删除用户失败", e);
+            return ResponseMessage.error("删除用户失败");
+        }
     }
 //    test -------------------------------------------------------------------------------------------------------------
 

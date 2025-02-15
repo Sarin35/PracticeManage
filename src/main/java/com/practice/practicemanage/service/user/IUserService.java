@@ -4,35 +4,40 @@ import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface IUserService {
 
     /**
-     * @deprecated 插入用户 测试
-     * @param user
+     *  查询用户 测试
+     * @return List<User>
+     */
+    List<User> userList();
+
+    /**
+     *  插入用户 测试
      * @return User
      */
     User add(UserDto user);
 
     /**
-     * @deprecated 根据id查询用户 测试
-     * @param userId
+     *  根据id查询用户 测试
      * @return User
      */
     User getById(Integer userId);
 
     /**
-     * @deprecated 修改用户 测试
-     * @param user
-     * @return
+     *  修改用户 测试
+     * @return User
      */
     User edit(UserIdDto user);
 
     /**
-     * @deprecated 删除用户 测试
-     * @param userId
-     * @return
+     *  删除用户 测试
+     * @return User
      */
-    int updataById(Integer userId);
+    Optional<User> updataById(Integer userId);
 
 //    test -------------------------------------------------------------------------------------------------------------
 }

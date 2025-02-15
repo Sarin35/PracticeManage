@@ -20,7 +20,7 @@ public class LogUtil {
      * @param clazz 日志记录的类
      * @return Logger 实例
      */
-    private static Logger getLogger(Class<?> clazz) {
+    private Logger getLogger(Class<?> clazz) {
         return LoggerFactory.getLogger(clazz);
     }
 
@@ -29,7 +29,7 @@ public class LogUtil {
      * @param clazz 日志记录的类
      * @param message 日志内容
      */
-    public static void info(Class<?> clazz, String message) {
+    public void info(Class<?> clazz, String message) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).info(message);
@@ -44,7 +44,7 @@ public class LogUtil {
      * @param message 日志内容
      * @param args 日志格式化参数
      */
-    public static void info(Class<?> clazz, String message, Object... args) {
+    public void info(Class<?> clazz, String message, Object... args) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).info(message, args);
@@ -58,7 +58,7 @@ public class LogUtil {
      * @param clazz 日志记录的类
      * @param message 日志内容
      */
-    public static void debug(Class<?> clazz, String message) {
+    public void debug(Class<?> clazz, String message) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).debug(message);
@@ -73,7 +73,7 @@ public class LogUtil {
      * @param message 日志内容
      * @param args 日志格式化参数
      */
-    public static void debug(Class<?> clazz, String message, Object... args) {
+    public void debug(Class<?> clazz, String message, Object... args) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).debug(message, args);
@@ -87,7 +87,7 @@ public class LogUtil {
      * @param clazz 日志记录的类
      * @param message 日志内容
      */
-    public static void warn(Class<?> clazz, String message) {
+    public void warn(Class<?> clazz, String message) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).warn(message);
@@ -102,7 +102,7 @@ public class LogUtil {
      * @param message 日志内容
      * @param args 日志格式化参数
      */
-    public static void warn(Class<?> clazz, String message, Object... args) {
+    public void warn(Class<?> clazz, String message, Object... args) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).warn(message, args);
@@ -116,7 +116,7 @@ public class LogUtil {
      * @param clazz 日志记录的类
      * @param message 日志内容
      */
-    public static void error(Class<?> clazz, String message) {
+    public void error(Class<?> clazz, String message) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).error(message);
@@ -131,7 +131,7 @@ public class LogUtil {
      * @param message 日志内容
      * @param args 日志格式化参数
      */
-    public static void error(Class<?> clazz, String message, Object... args) {
+    public void error(Class<?> clazz, String message, Object... args) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).error(message, args);
@@ -146,7 +146,7 @@ public class LogUtil {
      * @param message 日志内容
      * @param throwable 异常信息
      */
-    public static void error(Class<?> clazz, String message, Throwable throwable) {
+    public void error(Class<?> clazz, String message, Throwable throwable) {
         try {
             MDC.put("className", clazz.getSimpleName()); // 添加类名到 MDC
             getLogger(clazz).error(message, throwable);
