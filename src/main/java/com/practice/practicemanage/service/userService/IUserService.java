@@ -1,8 +1,9 @@
-package com.practice.practicemanage.service.user;
+package com.practice.practicemanage.service.userService;
 
 import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,5 +40,12 @@ public interface IUserService {
      */
     Optional<User> updataById(Integer userId);
 
-//    test -------------------------------------------------------------------------------------------------------------
+    /**
+     * 根据用户名在redis查询用户
+     * @param token
+     * @return
+     */
+    User getUserByToken(String token);
+
+    UserDetails loadUserByUsername(String token, String userName);
 }

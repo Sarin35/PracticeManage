@@ -4,7 +4,7 @@ import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.user.IUserService;
+import com.practice.practicemanage.service.userService.IUserService;
 import com.practice.practicemanage.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

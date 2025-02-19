@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
 
+    User findByUserName(String userName);
+
 }

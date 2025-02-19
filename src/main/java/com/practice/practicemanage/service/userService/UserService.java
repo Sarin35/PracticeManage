@@ -1,15 +1,25 @@
-package com.practice.practicemanage.service.user;
+package com.practice.practicemanage.service.userService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
+import com.practice.practicemanage.repository.RoleRepository;
 import com.practice.practicemanage.repository.UserRepository;
+import com.practice.practicemanage.security.CustomUserDetails;
+import com.practice.practicemanage.utils.JwtUtil;
 import com.practice.practicemanage.utils.LogUtil;
+import com.practice.practicemanage.utils.RedisUtil;
+import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +31,17 @@ public class UserService implements IUserService {
 
 //    自动装配 repository
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    LogUtil logUtil;
+    private LogUtil logUtil;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private TypeConversionUtil typeConversionUtil;
 
     //    test -------------------------------------------------------------------------------------------------------------
 
@@ -92,5 +110,53 @@ public class UserService implements IUserService {
         }
     }
 
-//    test -------------------------------------------------------------------------------------------------------------
+    @Override
+    public User getUserByToken(String token) {
+
+        String userName = jwtUtil.extractUsername(token);
+        Object userObject =  redisUtil.get(token + userName);
+//        是否为空
+        if (userObject == null){
+           return null;
+        }
+
+//        如果是Json字符串，转换成user
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            if (userObject instanceof String userJson) {
+                return objectMapper.readValue(userJson, User.class);
+            } else if (userObject instanceof User) {
+                return (User) userObject;
+            } else {
+                return null;
+            }
+        } catch (JsonMappingException e) {
+            logUtil.error(UserService.class, "转换类型置空", e);
+            return null;
+        } catch (JsonProcessingException e) {
+            logUtil.error(UserService.class, "JsonProcessing异常", e);
+            return null;
+        }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String token, String userName) throws UsernameNotFoundException {
+        try {
+            Object userObject = redisUtil.get(token + userName);
+
+            if (userObject == null) {
+
+                User user = userRepository.findByUserName(userName);
+                return new CustomUserDetails(user, roleRepository);
+
+            } else {
+                return new CustomUserDetails(typeConversionUtil.convertToClass(userObject, User.class), roleRepository);
+            }
+
+        } catch (UsernameNotFoundException e) {
+            logUtil.error(UserService.class, "查询用户UserName失败", e);
+            return null;
+        }
+    }
+
 }
