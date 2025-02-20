@@ -47,5 +47,18 @@ public interface IUserService {
      */
     User getUserByToken(String token);
 
+    /**
+     * 根据用户名在redis查询用户
+     * @param token
+     * @return
+     */
     UserDetails loadUserByUsername(String token, String userName);
+
+    /**
+     * 根据用户名和密码查询用户
+     * @param userName
+     * @param password
+     * @return
+     */
+    User findUser(String userName, String password);
 }

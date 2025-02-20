@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import reactor.util.annotation.NonNullApi;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -42,9 +41,13 @@ public class JwtFilter extends OncePerRequestFilter {
 //          SecurityContextHolder.getContext()：这是 Spring Security 提供的一个上下文对象，用来保存当前线程中的用户认证信息。
 //          setAuthentication(authentication)：通过 setAuthentication 方法将当前的 authentication（即用户的认证信息）设置到上下文中，表示当前用户已经通过认证。
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else if (refreshToken != null && jwtUtil.isTokenValid(refreshToken) && Objects.equals(userService.getUserByToken(token).getUserName(), jwtUtil.extractUsername(token))){
+        } else if (refreshToken != null && jwtUtil.isTokenValid(refreshToken) && Objects.equals(userService.getUserByToken(refreshToken).getUserName(), jwtUtil.extractUsername(refreshToken))){
 //            令牌过期，刷新令牌未过期，生成新令牌
-
+            UserDetails userDetails = userService.loadUserByUsername(refreshToken, jwtUtil.extractUsername(refreshToken));
+            String newToken = jwtUtil.createToken(jwtUtil.extractUsername(refreshToken));
+            response.setHeader("Authorization", "Bearer " + newToken);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);

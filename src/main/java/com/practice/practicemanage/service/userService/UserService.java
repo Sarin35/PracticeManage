@@ -110,6 +110,8 @@ public class UserService implements IUserService {
         }
     }
 
+    //    test -------------------------------------------------------------------------------------------------------------
+
     @Override
     public User getUserByToken(String token) {
 
@@ -155,6 +157,16 @@ public class UserService implements IUserService {
 
         } catch (UsernameNotFoundException e) {
             logUtil.error(UserService.class, "查询用户UserName失败", e);
+            return null;
+        }
+    }
+
+    @Override
+    public User findUser(String userName, String password) {
+        try {
+            return userRepository.findByUserNameAndPassWord(userName, password);
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "查询用户失败", e);
             return null;
         }
     }

@@ -14,7 +14,7 @@ public class JwtUtil {
     private String SECRET;
 
     private static final long JWT_EXPIRATION = 60 * 60 * 1000;  // 1小时的有效期
-    private static final long JWT_REFRESH_EXPIRATION = 60 * 60 * 1000 * 24 * 7;  // 7天的有效期，适用于刷新令牌
+    private static final long JWT_REFRESH_EXPIRATION = 60 * 60 * 1000 * 24;  // 1天的有效期，适用于刷新令牌
 
     @Autowired
     private LogUtil logUtil;
