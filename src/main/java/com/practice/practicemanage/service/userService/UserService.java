@@ -21,6 +21,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,12 +69,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    @CachePut(cacheNames = "user", key = "#result.id")
+//    @CachePut(cacheNames = "user", key = "#result.id") // 更新缓存
     public User add(UserDto user) {
 
         try {
             User userPojo = new User();
             BeanUtils.copyProperties(user, userPojo);
+            userPojo.setId(null);
+            userPojo.setPassWord(DigestUtils.md5DigestAsHex(user.getPassWord().getBytes())); // md5加密
             return userRepository.save(userPojo);
         }catch (Exception e){
             logUtil.error(UserService.class, "插入用户失败", e);
@@ -113,10 +116,10 @@ public class UserService implements IUserService {
     //    test -------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User getUserByToken(String token) {
+    public User getUserByToken(String head, String token) {
 
         String userName = jwtUtil.extractUsername(token);
-        Object userObject =  redisUtil.get(token + userName);
+        Object userObject =  redisUtil.get(head+token + userName);
 //        是否为空
         if (userObject == null){
            return null;
@@ -142,9 +145,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String token, String userName) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String head, String token, String userName) throws UsernameNotFoundException {
         try {
-            Object userObject = redisUtil.get(token + userName);
+            Object userObject = redisUtil.get(head + token + userName);
 
             if (userObject == null) {
 

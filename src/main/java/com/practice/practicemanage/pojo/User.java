@@ -16,7 +16,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    @NotNull(message = "id不能为空")
     private Integer id;
 
     @Column(name = "username", length = 100)

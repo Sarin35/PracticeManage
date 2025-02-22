@@ -16,7 +16,6 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private Set<GrantedAuthority> authorities;
 
-    private RoleRepository roleRepository;
 
     public CustomUserDetails(User user, RoleRepository roleRepository) {
         this.username = user.getUserName();
@@ -25,7 +24,7 @@ public class CustomUserDetails implements UserDetails {
         this.authorities = new HashSet<>();
 
         // 根据 userId 查找对应的角色标识（identity）
-        String roleIdentify = getRoleIdentifyByUserId(Integer.valueOf(user.getStatus()));
+        String roleIdentify = getRoleIdentifyByUserId(roleRepository, Integer.valueOf(user.getStatus()));
 
         // 将 roleIdentify 转换为 GrantedAuthority
         if (roleIdentify != null) {
@@ -33,7 +32,7 @@ public class CustomUserDetails implements UserDetails {
         }
     }
 
-    private String getRoleIdentifyByUserId(Integer userId) {
+    private String getRoleIdentifyByUserId(RoleRepository roleRepository, Integer userId) {
         // 调用 RoleRepository 查找角色标识
         return roleRepository.findByUserid(userId).getIdentity();  // 根据 userId 查找角色标识
     }

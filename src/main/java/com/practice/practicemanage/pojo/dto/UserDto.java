@@ -13,4 +13,5 @@ public class UserDto implements Serializable {
     String passWord;
     String phone;
     Byte status;
+
 }

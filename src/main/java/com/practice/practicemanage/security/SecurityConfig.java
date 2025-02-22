@@ -1,5 +1,10 @@
 package com.practice.practicemanage.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.practicemanage.response.ResponseMessage;
+import com.practice.practicemanage.service.userService.LoginService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +27,8 @@ public class SecurityConfig {
 
     @Autowired
     private JwtFilter jwtFilter;
+    @Autowired
+    private LoginService loginService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,7 +39,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+        return authConfig.getAuthenticationManager(); // 获取 AuthenticationManager 对象
     }
 
     @Bean
@@ -45,8 +52,41 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS).permitAll() // 放行跨域请求的预检请求
                         .anyRequest().authenticated() // 其他请求都需要认证
                 )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            loginService.logout(getTokenFromRequest(request), getRefreshTokenFromRequest(request));
+                            // 设置响应头 Content-Type 为 application/json
+                            response.setContentType("application/json;charset=UTF-8");
+
+                            // 发送返回的响应内容
+                            ResponseMessage<Object> responseMessage = ResponseMessage.success("登出成功");
+                            response.getWriter().write(new ObjectMapper().writeValueAsString(responseMessage));  // 序列化为 JSON 格式
+
+                            // 确保返回状态码 200
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        })
+                        .clearAuthentication(true)  // 清除认证信息
+                        .invalidateHttpSession(true) // 使会话无效
+                )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    private String getRefreshTokenFromRequest(HttpServletRequest request) {
+        String token = request.getHeader("RefreshAuthorization");
+        if (token != null && token.startsWith("Bearer ")){
+            return token.substring(7);
+        }
+        return null;
+    }
+
+    private String getTokenFromRequest(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")){
+            return token.substring(7);
+        }
+        return null;
     }
 }
