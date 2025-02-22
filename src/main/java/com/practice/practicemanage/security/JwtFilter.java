@@ -1,8 +1,7 @@
 package com.practice.practicemanage.security;
 
-import com.practice.practicemanage.service.userService.UserService;
+import com.practice.practicemanage.service.UserService;
 import com.practice.practicemanage.utils.JwtUtil;
-import com.practice.practicemanage.utils.LogUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (token != null && jwtUtil.isTokenValid(token) && Objects.equals(userService.getUserByToken("TOKEN_",token).getUserName(), jwtUtil.extractUsername(token))){
 //          如果token有效，设置用户信息到SecurityContext
-            UserDetails userDetails = userService.loadUserByUsername("TOKEN_",token, jwtUtil.extractUsername(token));
+            UserDetails userDetails = userService.loadUserByUsername("TOKEN_", token, jwtUtil.extractUsername(token));
 //          创建一个 UsernamePasswordAuthenticationToken 对象，该对象表示一个已认证的用户身份，包含了认证所需的核心信息。
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 //          将创建的 authentication 对象（即用户的认证信息）存入 SecurityContextHolder 的 SecurityContext 中。
@@ -45,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else if (refreshToken != null && jwtUtil.isTokenValid(refreshToken) && Objects.equals(userService.getUserByToken("REFRESHTOKEN_", refreshToken).getUserName(), jwtUtil.extractUsername(refreshToken))){
 //            令牌过期，刷新令牌未过期，生成新令牌
-            UserDetails userDetails = userService.loadUserByUsername("REFRESHTOKEN_",refreshToken, jwtUtil.extractUsername(refreshToken));
+            UserDetails userDetails = userService.loadUserByUsername("REFRESHTOKEN_", refreshToken, jwtUtil.extractUsername(refreshToken));
             String newToken = jwtUtil.createToken(jwtUtil.extractUsername(refreshToken));
             response.setHeader("Authorization", "Bearer " + newToken);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

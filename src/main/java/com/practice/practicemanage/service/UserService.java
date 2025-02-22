@@ -1,4 +1,4 @@
-package com.practice.practicemanage.service.userService;
+package com.practice.practicemanage.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -9,6 +9,7 @@ import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.repository.RoleRepository;
 import com.practice.practicemanage.repository.UserRepository;
 import com.practice.practicemanage.security.CustomUserDetails;
+import com.practice.practicemanage.service.impl.IUserService;
 import com.practice.practicemanage.utils.JwtUtil;
 import com.practice.practicemanage.utils.LogUtil;
 import com.practice.practicemanage.utils.RedisUtil;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service // 配置为 spring 的 bean
@@ -119,35 +121,45 @@ public class UserService implements IUserService {
     public User getUserByToken(String head, String token) {
 
         String userName = jwtUtil.extractUsername(token);
-        Object userObject =  redisUtil.get(head+token + userName);
+        User userObject =  (User) redisUtil.get(head+token + userName);
+        if (userObject == null) {
+            return null;
+        }
+        Optional<User> userOptional = userRepository.findById(userObject.getId());
 //        是否为空
-        if (userObject == null){
+        if (userOptional.isEmpty()){
            return null;
+        } else if (!(Objects.equals(userObject, typeConversionUtil.convertToClass(userOptional.get(), User.class)))) { // 判断两个对象是否相等
+            logUtil.info(LoginService.class, "redis与数据库不一致，更新redis");
+            redisUtil.set("TOKEN_"+token+jwtUtil.extractUsername(token), userOptional.get());
+            userObject = userOptional.get();
         }
 
+        return userObject;
+
 //        如果是Json字符串，转换成user
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            if (userObject instanceof String userJson) {
-                return objectMapper.readValue(userJson, User.class);
-            } else if (userObject instanceof User) {
-                return (User) userObject;
-            } else {
-                return null;
-            }
-        } catch (JsonMappingException e) {
-            logUtil.error(UserService.class, "转换类型置空", e);
-            return null;
-        } catch (JsonProcessingException e) {
-            logUtil.error(UserService.class, "JsonProcessing异常", e);
-            return null;
-        }
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            if (userObject instanceof String userJson) {
+//                return objectMapper.readValue(userJson, User.class);
+//            } else if (userObject instanceof User) {
+//                return (User) userObject;
+//            } else {
+//                return null;
+//            }
+//        } catch (JsonMappingException e) {
+//            logUtil.error(UserService.class, "转换类型置空", e);
+//            return null;
+//        } catch (JsonProcessingException e) {
+//            logUtil.error(UserService.class, "JsonProcessing异常", e);
+//            return null;
+//        }
     }
 
     @Override
     public UserDetails loadUserByUsername(String head, String token, String userName) throws UsernameNotFoundException {
         try {
-            Object userObject = redisUtil.get(head + token + userName);
+            Object userObject = redisUtil.get( head + token + userName );
 
             if (userObject == null) {
 

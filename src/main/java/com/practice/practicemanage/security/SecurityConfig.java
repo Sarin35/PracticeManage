@@ -2,7 +2,7 @@ package com.practice.practicemanage.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.userService.LoginService;
+import com.practice.practicemanage.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +55,13 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            loginService.logout(getTokenFromRequest(request), getRefreshTokenFromRequest(request));
+                            loginService.logouts(getTokenFromRequest(request), getRefreshTokenFromRequest(request));
                             // 设置响应头 Content-Type 为 application/json
                             response.setContentType("application/json;charset=UTF-8");
+
+                            response.setHeader("Access-Control-Allow-Origin", "http://localhost:9528");
+                            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+                            response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
                             // 发送返回的响应内容
                             ResponseMessage<Object> responseMessage = ResponseMessage.success("登出成功");

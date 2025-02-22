@@ -1,4 +1,4 @@
-package com.practice.practicemanage.service.userService;
+package com.practice.practicemanage.service.impl;
 
 import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;

@@ -1,4 +1,4 @@
-package com.practice.practicemanage.service.userService;
+package com.practice.practicemanage.service.impl;
 
 import com.practice.practicemanage.pojo.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
@@ -19,7 +19,7 @@ public interface ILoginService {
      * @param refreshToken
      * @return
      */
-    ResponseMessage<Object> logout(String token, String refreshToken);
+    ResponseMessage<Object> logouts(String token, String refreshToken);
 
     /**
      * 注册
@@ -27,4 +27,11 @@ public interface ILoginService {
      * @return
      */
     ResponseMessage<Object> register(UserDto user);
+
+    /**
+     * 获取用户信息
+     * @param token
+     * @return
+     */
+    ResponseMessage<Object> infoByToken(String token);
 }

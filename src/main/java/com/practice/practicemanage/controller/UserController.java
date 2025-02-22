@@ -4,7 +4,7 @@ import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.userService.IUserService;
+import com.practice.practicemanage.service.impl.IUserService;
 import com.practice.practicemanage.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +18,9 @@ public class UserController {
 //    @PostMapping：增加
 //    @PutMapping：修改
 //    @DeleteMapping：删除
+//    @Validated 开启校验，校验失败会抛出异常，和@RequestBody 一起使用
+//    @RequestBody 接收前端传来的json数据
+//    @PathVariable 接收url中的参数
 
 //    测试
     @Autowired
@@ -36,7 +39,7 @@ public class UserController {
         }
     }
     @GetMapping("/{userId}")
-    public ResponseMessage<Object> testGetMaping(@PathVariable Integer userId){
+    public ResponseMessage<Object> testGetMapping(@PathVariable Integer userId){
         try {
             User user = userService.getById(userId);
             return ResponseMessage.success(user);

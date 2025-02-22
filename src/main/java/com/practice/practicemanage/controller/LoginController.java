@@ -1,13 +1,16 @@
 package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.pojo.UserLoginDto;
+import com.practice.practicemanage.pojo.dto.TokenDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.userService.LoginService;
+import com.practice.practicemanage.service.LoginService;
 import com.practice.practicemanage.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping
@@ -32,5 +35,11 @@ public class LoginController {
     @PostMapping("/register")
     public ResponseMessage<Object> register(@Validated @RequestBody UserDto user){
         return loginService.register(user);
+    }
+
+    @PostMapping("/info")
+    public ResponseMessage<Object> infoByToken(@Validated @RequestBody TokenDto token){
+        logUtil.info(LoginController.class, "获取用户信息infoByToken");
+        return loginService.infoByToken(token.getToken());
     }
 }
