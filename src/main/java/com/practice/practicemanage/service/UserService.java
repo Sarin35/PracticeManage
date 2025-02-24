@@ -121,21 +121,23 @@ public class UserService implements IUserService {
     public User getUserByToken(String head, String token) {
 
         String userName = jwtUtil.extractUsername(token);
-        User userObject =  (User) redisUtil.get(head+token + userName);
-        if (userObject == null) {
-            return null;
-        }
-        Optional<User> userOptional = userRepository.findById(userObject.getId());
-//        是否为空
-        if (userOptional.isEmpty()){
-           return null;
-        } else if (!(Objects.equals(userObject, typeConversionUtil.convertToClass(userOptional.get(), User.class)))) { // 判断两个对象是否相等
-            logUtil.info(LoginService.class, "redis与数据库不一致，更新redis");
-            redisUtil.set("TOKEN_"+token+jwtUtil.extractUsername(token), userOptional.get());
-            userObject = userOptional.get();
-        }
+//        User userObject =  (User) redisUtil.get(head+token + userName);
+//        if (userObject == null) {
+//            return null;
+//        }
 
-        return userObject;
+//        从数据库中查询用户，判断redis与数据库是否一致，不一致则更新redis，但只有修改个人信息时才会出现这种情况
+//        Optional<User> userOptional = userRepository.findById(userObject.getId());
+////        是否为空
+//        if (userOptional.isEmpty()){
+//           return null;
+//        } else if (!(Objects.equals(userObject, typeConversionUtil.convertToClass(userOptional.get(), User.class)))) { // 判断两个对象是否相等
+//            logUtil.info(LoginService.class, "redis与数据库不一致，更新redis");
+//            redisUtil.set("TOKEN_"+token+jwtUtil.extractUsername(token), userOptional.get());
+//            userObject = userOptional.get();
+//        }
+
+        return (User) redisUtil.get(head+token + userName);
 
 //        如果是Json字符串，转换成user
 //        ObjectMapper objectMapper = new ObjectMapper();
@@ -179,6 +181,7 @@ public class UserService implements IUserService {
     @Override
     public User findUser(String userName, String password) {
         try {
+            System.out.println("userName: " + userName + " password: " + password);
             return userRepository.findByUserNameAndPassWord(userName, password);
         } catch (Exception e) {
             logUtil.error(UserService.class, "查询用户失败", e);

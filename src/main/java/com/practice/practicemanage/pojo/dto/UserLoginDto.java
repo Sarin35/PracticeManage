@@ -1,5 +1,6 @@
-package com.practice.practicemanage.pojo;
+package com.practice.practicemanage.pojo.dto;
 
+import com.practice.practicemanage.pojo.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 

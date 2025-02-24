@@ -1,16 +1,18 @@
 package com.practice.practicemanage.controller;
 
-import com.practice.practicemanage.pojo.UserLoginDto;
+import com.practice.practicemanage.pojo.Menu;
+import com.practice.practicemanage.pojo.dto.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.TokenDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.LoginService;
+import com.practice.practicemanage.service.MenuService;
 import com.practice.practicemanage.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -20,6 +22,8 @@ public class LoginController {
     private LogUtil logUtil;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private MenuService menuService;
 
 
     @PostMapping("/login")
@@ -39,7 +43,8 @@ public class LoginController {
 
     @PostMapping("/info")
     public ResponseMessage<Object> infoByToken(@Validated @RequestBody TokenDto token){
-        logUtil.info(LoginController.class, "获取用户信息infoByToken");
-        return loginService.infoByToken(token.getToken());
+        logUtil.info(LoginController.class, "获取用户信息and菜单信息infoByToken");
+        List<Menu> menuList = menuService.getMenuList();
+        return loginService.infoByToken(token.getToken(), menuList);
     }
 }

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.util.List;
+
 @Component
 public class TypeConversionUtil {
 
@@ -129,6 +132,36 @@ public class TypeConversionUtil {
         return new java.text.SimpleDateFormat("yyyy-MM-dd").format(value);
     }
 
+    public String toJson(Object value) {
+        try {
+            return objectMapper.writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            logUtil.error(TypeConversionUtil.class, "转换为 JSON 字符串失败", e);
+            return null; // 返回 null 或可以抛出自定义异常
+        }
+    }
+
+    /**
+     * 将 Object 类型转换为指定类型的 List
+     *
+     * @param obj Object 类型的输入
+     * @param clazz List 中元素的类型
+     * @param <T> 目标 List 中元素的类型
+     * @return 转换后的 List
+     * @throws IOException 如果转换失败
+     */
+    public <T> List<T> convertObjectToList(Object obj, Class<T> clazz) throws IOException {
+        try {
+            // 使用 ObjectMapper 将 Object 转换为字符串
+            String json = objectMapper.writeValueAsString(obj);
+            // 将 JSON 字符串转换为指定类型的 List
+            return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
+        } catch (JsonProcessingException e) {
+            logUtil.error(TypeConversionUtil.class, "转换为 list 失败", e);
+            return null; // 返回 null 或可以抛出自定义异常
+        }
+    }
+
     // 将 Object 转换为指定类型
     public <T> T convertToClass(Object value, Class<T> targetType) {
         if (value == null) {
@@ -139,12 +172,29 @@ public class TypeConversionUtil {
             if (targetType == String.class) {
                 return targetType.cast(value.toString());
             }
+
             // 如果目标类型是复杂类型（例如 User），尝试将 JSON 字符串转换为该类型
             if (value instanceof String) { // 判断是否为 JSON 字符串
                 return objectMapper.readValue((String) value, targetType); // 将 JSON 字符串转换为指定类型
             }
             // 否则通过基本类型转换
             return targetType.cast(value);
+        } catch (ClassCastException | JsonProcessingException e) {
+            logUtil.error(TypeConversionUtil.class, "类型转换失败", e);
+            return null;  // 返回 null 或可以抛出自定义异常
+        }
+    }
+
+    // 将 String 转换为指定类型
+    public <T> T convertStringToClass(String value, Class<T> targetType) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            // 如果目标类型是复杂类型（例如 User），尝试将 JSON 字符串转换为该类型
+            // 判断是否为 JSON 字符串
+            return objectMapper.readValue(value, targetType); // 将 JSON 字符串转换为指定类型
+            // 否则通过基本类型转换
         } catch (ClassCastException | JsonProcessingException e) {
             logUtil.error(TypeConversionUtil.class, "类型转换失败", e);
             return null;  // 返回 null 或可以抛出自定义异常

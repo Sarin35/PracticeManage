@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeacherInfoRepository extends JpaRepository<TeacherInfo, Integer> {
+
+    Object findByPhone(String phone);
+
+
 }

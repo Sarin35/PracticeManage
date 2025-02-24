@@ -21,6 +21,7 @@ public class UserController {
 //    @Validated 开启校验，校验失败会抛出异常，和@RequestBody 一起使用
 //    @RequestBody 接收前端传来的json数据
 //    @PathVariable 接收url中的参数
+//    @RequestParam 接收url中的参数
 
 //    测试
     @Autowired
