@@ -10,13 +10,12 @@ import com.practice.practicemanage.service.AssignmentService;
 import com.practice.practicemanage.service.StudentInfoService;
 import com.practice.practicemanage.service.TeacherInfoService;
 import com.practice.practicemanage.utils.LogUtil;
+import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ import java.util.Map;
 @RequestMapping
 public class AssignmentController {
 
-    有一个缓存问题，已经修改了的文件，但是不会重新查询
+//    有一个缓存问题，已经修改了的文件，但是不会重新查询
 
     @Autowired
     private AssignmentService assignmentService;
@@ -51,18 +50,22 @@ public class AssignmentController {
         return assignmentService.savaAssignment(assignmentDto);
     }
 
+    @PostMapping("/deleteAssignment")
+    public ResponseMessage<Object> deleteAssignment(@RequestBody Map<String, Integer> idMap) {
+        return assignmentService.deleteAssignmentById(idMap.get("id"));
+    }
+
     private ResponseMessage<Object> getAssignmentList(@RequestBody @Validated PhoneDto assignment, byte status) {
         try {
-            System.out.println("传递的数据："+assignment.getPhone());
             StudentInfo teacherPhone = (StudentInfo) studentInfoService.getTeacherPhoneByStudentPhone(assignment.getPhone());
-            System.out.println("学生个人信息表获取老师手机号："+teacherPhone.getTeacherPhone());
             TeacherInfo teacherInfo = (TeacherInfo) teacherInfoService.getTeacherListByPhone(teacherPhone.getTeacherPhone());
-            System.out.println("老师个人信息表："+teacherInfo);
             List<Assignment> assByPhone = assignmentService.findAssByPhone(teacherInfo.getName(), teacherPhone.getTeacherPhone(), assignment.getPhone(), status);
-            System.out.println("作业表："+assByPhone);
-//            Map<String, Object> assignmentList = new HashMap<>();
-//            assignmentList.put("teacherInfo", teacherInfo);
-//            assignmentList.put("assignment", assByPhone);
+            // 将 puttimes 转换为时间戳（毫秒）
+            for (Assignment assignments : assByPhone) {
+                if (assignments.getPuttimes() != null) {
+                    assignments.setPuttimes(Instant.ofEpochSecond(assignments.getPuttimes().toEpochMilli()));  // 转换为时间戳（毫秒）
+                }
+            }
             if (assByPhone == null || assByPhone.isEmpty()){
                 return ResponseMessage.success("无作业",assByPhone);
             }

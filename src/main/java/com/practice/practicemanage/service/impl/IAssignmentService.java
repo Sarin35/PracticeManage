@@ -11,4 +11,6 @@ public interface IAssignmentService {
     List<Assignment> findAssByPhone(String teacher,String phone, String studentPhone, byte status);
 
     ResponseMessage<Object> savaAssignment(AssignmentDto assignmentDto);
+
+    ResponseMessage<Object> deleteAssignmentById(Integer id);
 }

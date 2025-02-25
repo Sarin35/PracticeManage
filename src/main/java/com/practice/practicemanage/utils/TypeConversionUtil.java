@@ -28,6 +28,18 @@ public class TypeConversionUtil {
         }
     }
 
+    // String 转 Byte
+    public Byte toByte(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        try {
+            return toInteger(value).byteValue();
+        } catch (NumberFormatException e) {
+            return null; // 返回 null 或可以抛出自定义异常
+        }
+    }
+
     // 将 String 转换为 Long
     public Long toLong(String value) {
         if (value == null || value.isEmpty()) {

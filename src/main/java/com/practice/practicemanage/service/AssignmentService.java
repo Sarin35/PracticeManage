@@ -2,6 +2,7 @@ package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.Assignment;
 import com.practice.practicemanage.pojo.dto.AssignmentDto;
+import com.practice.practicemanage.pojo.dto.PhoneDto;
 import com.practice.practicemanage.repository.AssignmentRepository;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.IAssignmentService;
@@ -37,17 +38,21 @@ public class AssignmentService implements IAssignmentService {
                     titlesFromStatus3.add(assignment.getTitle());  // 假设 getTitle() 返回的是 String 类型
                 }
 
-                // 3. 创建一个新的列表来存储去除重复 title 后的作业
+                // 3. 创建一个新的列表来存储去除重复 title 且 status 不同的作业
                 List<Assignment> filteredAssignments = new ArrayList<>();
                 for (Assignment assignment : byTeacherPhoneAndStatus1) {
-                    if (!titlesFromStatus3.contains(assignment.getTitle())) {  // 过滤掉重复的 title
-                        assignment.setTeacger(teacher);  // 这里设置教师手机号
-                        filteredAssignments.add(assignment);
+                    // 判断 title 是否在 byTeacherPhoneAndStatus3 中出现且 status 是否不同
+                    for (Assignment assignmentStatus3 : byTeacherPhoneAndStatus3) {
+                        if (assignment.getTitle().equals(assignmentStatus3.getTitle()) && !assignment.getStatus().equals(assignmentStatus3.getStatus())) {
+                            assignment.setTeacger(teacher);  // 这里设置教师手机号
+                            filteredAssignments.add(assignment);
+                        }
                     }
                 }
 
                 // 4. 返回去重后的列表
                 return filteredAssignments;
+
 
             } else if (status == 3) {
                 List<Assignment> assignmentList = assignmentRepository.findByStudentPhoneAndStatus(studentPhone, status);
@@ -78,6 +83,19 @@ public class AssignmentService implements IAssignmentService {
         } catch (Exception e) {
             logUtil.error(AssignmentService.class, "保存失败", e);
             return ResponseMessage.error("提交作业失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> deleteAssignmentById(Integer id) {
+        try {
+//            System.out.println("传递的id-》》》》》》》》》"+id);
+            assignmentRepository.updateStatusById(id, (byte) 4);
+//            System.out.println("执行修改-》》》》》》》》》"+id);
+            return ResponseMessage.success("删除成功");
+        } catch (Exception e) {
+            logUtil.error(AssignmentService.class, "删除失败", e);
+            return ResponseMessage.error("删除失败");
         }
     }
 

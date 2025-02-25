@@ -35,7 +35,7 @@ public class Assignment {
     private String title;
 
     @Lob
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "score", precision = 5, scale = 2)

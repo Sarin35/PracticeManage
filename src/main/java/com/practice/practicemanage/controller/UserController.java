@@ -23,7 +23,7 @@ public class UserController {
 //    @PathVariable 接收url中的参数
 //    @RequestParam 接收url中的参数
 
-//    测试
+//    测试 --- 这里的数据实际上应该写入到service层
     @Autowired
     IUserService userService;
     @Autowired

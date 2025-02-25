@@ -2,6 +2,7 @@ package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.Menu;
 import com.practice.practicemanage.pojo.Role;
+import com.practice.practicemanage.pojo.StudentInfo;
 import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
@@ -33,6 +34,8 @@ public class LoginService implements ILoginService {
     private TypeConversionUtil typeConversionUtil;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private StudentInfoService studentInfoService;
 
     @Override
     public ResponseMessage<Object> login(UserLoginDto users) {
@@ -127,7 +130,8 @@ public class LoginService implements ILoginService {
 //            }
             
             Optional<Role> role = Optional.ofNullable(roleRepository.findByUserid(Integer.valueOf(user.getStatus())));
-            Map<String, Object> map = getMap(user, role.get(), menuList);
+            StudentInfo teacherPhone = (StudentInfo) studentInfoService.getTeacherPhoneByStudentPhone(user.getPhone());
+            Map<String, Object> map = getMap(user, role.get(), menuList, teacherPhone.getTeacherPhone());
             logUtil.info(LoginService.class, "路由:"+ menuList);
 
             return ResponseMessage.success("返回角色个人信息", map);
@@ -137,10 +141,11 @@ public class LoginService implements ILoginService {
         }
     }
 
-    private static Map<String, Object> getMap(User user, Role role, List<Menu> menuList) {
+    private static Map<String, Object> getMap(User user, Role role, List<Menu> menuList, String teacherPhone) {
         Map<String, Object> map = new HashMap<>();
         map.put("name", user.getUserName());
         map.put("phone", user.getPhone());
+        map.put("teacherphone", teacherPhone);
         switch (user.getStatus()) {
             case 1:
                 map.put("avatar", "https://i.pinimg.com/1200x/8d/9f/09/8d9f095f1c59bba933ce67c7cf7fe508.jpg");
