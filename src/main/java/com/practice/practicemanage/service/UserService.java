@@ -1,5 +1,6 @@
 package com.practice.practicemanage.service;
 
+import com.alibaba.druid.support.opds.udf.SqlCodeStat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -121,10 +122,12 @@ public class UserService implements IUserService {
     public User getUserByToken(String head, String token) {
 
         String userName = jwtUtil.extractUsername(token);
-//        User userObject =  (User) redisUtil.get(head+token + userName);
-//        if (userObject == null) {
-//            return null;
-//        }
+        User userObject =  (User) redisUtil.get(head+token + userName);
+        if (userObject == null) {
+            User userObjects = new User();
+            userObjects.setUserName("NotName");
+            return userObjects;
+        }
 
 //        从数据库中查询用户，判断redis与数据库是否一致，不一致则更新redis，但只有修改个人信息时才会出现这种情况
 //        Optional<User> userOptional = userRepository.findById(userObject.getId());
@@ -137,7 +140,7 @@ public class UserService implements IUserService {
 //            userObject = userOptional.get();
 //        }
 
-        return (User) redisUtil.get(head+token + userName);
+        return userObject;
 
 //        如果是Json字符串，转换成user
 //        ObjectMapper objectMapper = new ObjectMapper();

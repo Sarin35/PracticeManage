@@ -1,7 +1,9 @@
 package com.practice.practicemanage.security;
 
+import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.service.UserService;
 import com.practice.practicemanage.utils.JwtUtil;
+import com.practice.practicemanage.utils.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 //继承 OncePerRequestFilter：确保每个请求只调用一次该过滤器，适合进行请求预处理。
 @Component
@@ -24,6 +27,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisUtil redisUtil;
 
 
 //    拦截器
@@ -32,9 +37,17 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = getTokenFromRequest(request);
         String refreshToken = getRefreshTokenFromRequest(request);
         System.out.println("请求方法 Request method: " + request.getMethod());  // 打印请求方法
+//        System.out.println("token Request token: " + token);  // 打印请求方法
+
+        // 跳过登录和注册请求，不进行JWT验证
+        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (token != null && jwtUtil.isTokenValid(token) && Objects.equals(userService.getUserByToken("TOKEN_",token).getUserName(), jwtUtil.extractUsername(token))){
 //          如果token有效，设置用户信息到SecurityContext
+            System.out.println("令牌未过期，刷新令牌未过期，或正在第一次登录");
             UserDetails userDetails = userService.loadUserByUsername("TOKEN_", token, jwtUtil.extractUsername(token));
 //          创建一个 UsernamePasswordAuthenticationToken 对象，该对象表示一个已认证的用户身份，包含了认证所需的核心信息。
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -44,9 +57,12 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else if (refreshToken != null && jwtUtil.isTokenValid(refreshToken) && Objects.equals(userService.getUserByToken("REFRESHTOKEN_", refreshToken).getUserName(), jwtUtil.extractUsername(refreshToken))){
 //            令牌过期，刷新令牌未过期，生成新令牌
+            System.out.println("令牌过期，刷新令牌未过期，生成新令牌");
             UserDetails userDetails = userService.loadUserByUsername("REFRESHTOKEN_", refreshToken, jwtUtil.extractUsername(refreshToken));
-            String newToken = jwtUtil.createToken(jwtUtil.extractUsername(refreshToken));
-            response.setHeader("Authorization", "Bearer " + newToken);
+            User refreshtoken = userService.getUserByToken("REFRESHTOKEN_", refreshToken);
+            String newToken = jwtUtil.createToken(refreshtoken.getUserName());
+            response.setHeader("Authorizationagain", newToken);
+            redisUtil.set("TOKEN_"+newToken+refreshtoken.getUserName(), refreshtoken, 1, TimeUnit.HOURS); // 1小时过期
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

@@ -1,12 +1,11 @@
 package com.practice.practicemanage.service;
 
-import com.practice.practicemanage.pojo.Menu;
-import com.practice.practicemanage.pojo.Role;
-import com.practice.practicemanage.pojo.StudentInfo;
-import com.practice.practicemanage.pojo.User;
+import com.practice.practicemanage.pojo.*;
 import com.practice.practicemanage.pojo.dto.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.repository.RoleRepository;
+import com.practice.practicemanage.repository.TeacherInfoRepository;
+import com.practice.practicemanage.repository.UnitUserRepository;
 import com.practice.practicemanage.repository.UserRepository;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.ILoginService;
@@ -36,6 +35,10 @@ public class LoginService implements ILoginService {
     private RoleRepository roleRepository;
     @Autowired
     private StudentInfoService studentInfoService;
+    @Autowired
+    private TeacherInfoRepository teacherInfoRepository;
+    @Autowired
+    private UnitUserRepository unitUserRepository;
 
     @Override
     public ResponseMessage<Object> login(UserLoginDto users) {
@@ -67,6 +70,9 @@ public class LoginService implements ILoginService {
         map.put("passWord", user.getPassWord());
         map.put("phone", user.getPhone());
         map.put("status", user.getStatus());
+
+        Role role = roleRepository.findByUserid(Integer.valueOf(user.getStatus()));
+        map.put("roles", role.getIdentity());
 
         return ResponseMessage.success("登录成功", map);
     }
@@ -129,12 +135,25 @@ public class LoginService implements ILoginService {
 //                user = userOptional.get();
 //            }
             
-            Optional<Role> role = Optional.ofNullable(roleRepository.findByUserid(Integer.valueOf(user.getStatus())));
-            StudentInfo teacherPhone = (StudentInfo) studentInfoService.getTeacherPhoneByStudentPhone(user.getPhone());
-            Map<String, Object> map = getMap(user, role.get(), menuList, teacherPhone.getTeacherPhone());
-            logUtil.info(LoginService.class, "路由:"+ menuList);
+            Role role = roleRepository.findByUserid(Integer.valueOf(user.getStatus()));
+            if (Objects.equals(role.getIdentity(), "STUDENT")) {
 
-            return ResponseMessage.success("返回角色个人信息", map);
+                StudentInfo teacherPhone = (StudentInfo) studentInfoService.getTeacherPhoneByStudentPhone(user.getPhone());
+                Map<String, Object> map = getMap(user, role, menuList, teacherPhone.getTeacherPhone());
+                logUtil.info(LoginService.class, "路由:"+ menuList);
+                return ResponseMessage.success("返回角色个人信息", map);
+
+            } else if (Objects.equals(role.getIdentity(), "TEACHER") || Objects.equals(role.getIdentity(), "UNIT") || Objects.equals(role.getIdentity(), "ADMINISTRATOR")) {
+
+                Map<String, Object> map = getMap(user, role, menuList, "NotTeacher");
+                logUtil.info(LoginService.class, "路由:"+ menuList);
+                return ResponseMessage.success("返回角色个人信息", map);
+
+            } else {
+                logUtil.error(LoginService.class, "该用户无角色");
+                return ResponseMessage.error("该用户无角色");
+            }
+
         } catch (Exception e) {
             logUtil.error(LoginService.class, "获取用户信息失败", e);
             return ResponseMessage.error("获取用户信息失败");
