@@ -37,6 +37,7 @@ public class InternshipReportController {
     public ResponseMessage<Object> getReportList(@RequestBody Map<String, String> report) {
         System.out.println("report->>>>>>>>>>>>"+report);
         return internshipReportService.findListByStudentPhone(report.get("studentPhone"),
+                report.get("role"),
                 typeConversionUtil.toInteger(report.get("page")),
                 typeConversionUtil.toInteger(report.get("limit")));
     }

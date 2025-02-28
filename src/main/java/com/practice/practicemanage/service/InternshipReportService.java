@@ -42,14 +42,29 @@ public class InternshipReportService implements IInternshipReportService {
     }
 
     @Override
-    public ResponseMessage<Object> findListByStudentPhone(String studentPhone, Integer page, Integer limit) {
+    public ResponseMessage<Object> findListByStudentPhone(String phone, String role, Integer page, Integer limit) {
         try {
-            logUtil.info(InternshipReportService.class, "page:"+page+";limit:"+limit+";phone:"+studentPhone);
-            Pageable reportPage = PageRequest.of(page -1, limit);
+            if (role.equals("STUDENT")) {
 
-            Page<InternshipReport> internshipReports = internshipReportRepository.findByStudentPhoneAndStatusNot(studentPhone, (byte) 0, reportPage);
+//                logUtil.info(InternshipReportService.class, "page:"+page+";limit:"+limit+";phone:"+ phone);
+                Pageable reportPage = PageRequest.of(page -1, limit);
 
-            return returnPage(internshipReports);
+                Page<InternshipReport> internshipReports = internshipReportRepository.findByStudentPhoneAndStatusNot(phone, (byte) 0, reportPage);
+
+                return returnPage(internshipReports);
+
+            } else if (role.equals("TEACHER")) {
+
+                Pageable reportPage = PageRequest.of(page -1, limit);
+
+                Page<InternshipReport> internshipReports = internshipReportRepository.findByTeacherPhoneAndStatusNot(phone, (byte) 0, reportPage);
+
+                return returnPage(internshipReports);
+
+            }
+
+            return ResponseMessage.error("权限外角色");
+
         } catch (Exception e) {
             logUtil.error(InternshipReportService.class, "查询报告失败", e);
             return ResponseMessage.error("查询报告失败");

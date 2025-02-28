@@ -5,8 +5,12 @@ import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface StudentInfoRepository extends JpaRepository<StudentInfo, Integer> {
 
     Object findByPhone(String phone);
+
+    StudentInfo findByTeacherPhone(String teacherPhone);
 }

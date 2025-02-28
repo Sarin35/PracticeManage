@@ -32,6 +32,14 @@ public class WeekReportController {
                                                    typeConversionUtil.toByte(phone.get("status")));
     }
 
+    @PostMapping("/getWeekListsTeacher") // 老师查找学生周志
+    public ResponseMessage<Object> getMyWeekReports(@RequestBody Map<String, String> phone) {
+        return weeklyReportService.getMyWeekReports(phone.get("teacherPhone"),
+                typeConversionUtil.toInteger(phone.get("page")),  // 当前页数
+                typeConversionUtil.toInteger(phone.get("limit")),// 每页数据条数
+                typeConversionUtil.toByte(phone.get("status")));
+    }
+
     @PostMapping("/updataStatus")
     public ResponseMessage<Object> updateStatusSp(@Validated @RequestBody Map<String, Integer> idAndStatus) {
         System.out.println("获取的参数："+idAndStatus);
@@ -45,6 +53,14 @@ public class WeekReportController {
                                                 typeConversionUtil.toInteger(titles.get("page")),  // 当前页数
                                                 typeConversionUtil.toInteger(titles.get("limit")),// 每页数据条数
                                                 titles.get("title"));
+    }
+
+    @PostMapping("/selectFilterSp") // 老师执行查询
+    public ResponseMessage<Object> selectFilterSp(@Validated @RequestBody Map<String, String> titles) {
+        return weeklyReportService.findByFilters(titles.get("teacherPhone"),
+                                                 typeConversionUtil.toInteger(titles.get("page")),  // 当前页数
+                                                 typeConversionUtil.toInteger(titles.get("limit")),// 每页数据条数
+                                                 titles.get("title"));
     }
 
     @PostMapping("/createWeeks")

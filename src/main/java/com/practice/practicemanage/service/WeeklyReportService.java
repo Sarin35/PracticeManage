@@ -56,7 +56,36 @@ public class WeeklyReportService implements IWeeklyReportService {
         }
     }
 
+    @Override
+    public ResponseMessage<Object> getMyWeekReports(String teacherPhone, int page, int limit, byte status) {
+        if (status == 1 || status == 2) {
+            try {
+                // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
+                Pageable pageable = PageRequest.of(page - 1, limit);
 
+                // 查询分页数据
+                Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndStatus(teacherPhone, status, pageable);
+
+                return returnPage(weeklyReportPage);
+            } catch (Exception e) {
+                logUtil.error(WeeklyReport.class, "查询用户表失败", e);
+                return ResponseMessage.success("周志获取失败");
+            }
+        } else {
+            try {
+                // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
+                Pageable pageable = PageRequest.of(page - 1, limit);
+
+                // 查询分页数据
+                Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndStatusNot(teacherPhone, (byte) 0, pageable);
+
+                return returnPage(weeklyReportPage);
+            } catch (Exception e) {
+                logUtil.error(WeeklyReport.class, "查询用户表失败", e);
+                return ResponseMessage.success("周志获取失败");
+            }
+        }
+    }
 
     @Override
     public ResponseMessage<Object> updateStatus(Integer id, Integer status) {
@@ -82,6 +111,22 @@ public class WeeklyReportService implements IWeeklyReportService {
 
             // 查询分页数据
             Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.searchByPhoneAndTitle(studentPhone, teacherPhone, title, pageable);
+
+            return returnPage(weeklyReportPage);
+        } catch (Exception e) {
+            logUtil.error(WeeklyReport.class, "查询失败", e);
+            return ResponseMessage.success("查询失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> findByFilters(String teacherPhone, Integer page, Integer limit, String title) {
+        try {
+            // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
+            Pageable pageable = PageRequest.of(page - 1, limit);
+
+            // 查询分页数据
+            Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.searchByPhoneAndTitles(teacherPhone, title, pageable);
 
             return returnPage(weeklyReportPage);
         } catch (Exception e) {

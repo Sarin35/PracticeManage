@@ -16,6 +16,10 @@ public interface WeeklyReportRepository extends JpaRepository<WeeklyReport, Inte
     Page<WeeklyReport> findByStudentPhoneAndTeacherPhoneAndStatusNot(String studentPhone, String teacherPhone, int status, Pageable pageable);
 
     Page<WeeklyReport> findByStudentPhoneAndTeacherPhoneAndStatus(String studentPhone, String teacherPhone, int status, Pageable pageable);
+    
+    Page<WeeklyReport> findByTeacherPhoneAndStatus(String teacherPhone, Byte status, Pageable pageable);
+
+    Page<WeeklyReport> findByTeacherPhoneAndStatusNot(String teacherPhone, Byte status, Pageable pageable);
 
 
     @Modifying
@@ -33,6 +37,12 @@ public interface WeeklyReportRepository extends JpaRepository<WeeklyReport, Inte
                                              @Param("title") String title,
                                              Pageable pageable);
 
-
+    @Query("SELECT y FROM WeeklyReport y WHERE " +
+            "(y.teacherPhone = :teacherPhone OR :teacherPhone IS NULL) AND " +
+            "(y.title LIKE %:title% OR :title IS NULL) AND " +
+            "y.status != 0")
+    Page<WeeklyReport> searchByPhoneAndTitles(@Param("teacherPhone") String teacherPhone,
+                                             @Param("title") String title,
+                                             Pageable pageable);
 
 }

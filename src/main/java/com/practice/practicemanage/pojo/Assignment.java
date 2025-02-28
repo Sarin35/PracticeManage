@@ -57,4 +57,10 @@ public class Assignment {
     @Transient
     private String teacger;
 
+    @Transient
+    private String studentNumber;
+
+    @Transient
+    private String name;
+
 }

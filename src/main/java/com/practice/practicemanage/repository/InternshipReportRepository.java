@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface InternshipReportRepository extends JpaRepository<InternshipReport, Integer> {
 
     Page<InternshipReport> findByStudentPhoneAndStatusNot(@Size(max = 20) String studentPhone, @NotNull Byte status, Pageable pageable);
+
+    Page<InternshipReport> findByTeacherPhoneAndStatusNot(@Size(max = 20) String teacherPhone, @NotNull Byte status, Pageable pageable);
 }

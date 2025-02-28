@@ -12,4 +12,7 @@ public interface IWeeklyReportService {
 
     ResponseMessage<Object> weekSava(WeeklyReportDto weeklyReportDto);
 
+    ResponseMessage<Object> getMyWeekReports(String teacherPhone, int page, int limit, byte status);
+    ResponseMessage<Object> findByFilters(String teacherPhone, Integer page, Integer limit, String title);
+
 }
