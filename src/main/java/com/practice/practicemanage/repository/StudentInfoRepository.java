@@ -12,5 +12,6 @@ public interface StudentInfoRepository extends JpaRepository<StudentInfo, Intege
 
     Object findByPhone(String phone);
 
-    StudentInfo findByTeacherPhone(String teacherPhone);
+
+    List<StudentInfo> findByTeacherPhone(String teacherPhone);
 }
