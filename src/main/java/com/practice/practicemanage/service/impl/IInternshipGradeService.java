@@ -9,4 +9,6 @@ public interface IInternshipGradeService {
     ResponseMessage<Object> getTeacherinfo(String phone);
 
     ResponseMessage<Object> savaGrade(InternshipGradeDto internshipGradeDto);
+
+    ResponseMessage<Object> getUnitInfo(String phone);
 }

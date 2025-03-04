@@ -3,9 +3,7 @@ package com.practice.practicemanage.controller;
 import com.practice.practicemanage.pojo.Assignment;
 import com.practice.practicemanage.pojo.StudentInfo;
 import com.practice.practicemanage.pojo.TeacherInfo;
-import com.practice.practicemanage.pojo.dto.AssignmentDto;
 import com.practice.practicemanage.pojo.dto.AssignmentIdDto;
-import com.practice.practicemanage.pojo.dto.PhoneDto;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.AssignmentService;
 import com.practice.practicemanage.service.StudentInfoService;
@@ -17,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

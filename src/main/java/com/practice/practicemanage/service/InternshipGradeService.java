@@ -48,7 +48,7 @@ public class InternshipGradeService implements IInternshipGradeService {
 //            用学生手机号查询学生成绩
             InternshipGrade internshipGrade = (InternshipGrade) internshipGradeRepository.findByStudentPhone(phone);
 //            用公司名查询指导老师个人信息
-            UnitUser unitUsers = (UnitUser) unitUserRepository.findByName(studentInfo.getUnitName());
+            UnitUser unitUsers = (UnitUser) unitUserRepository.findByPhone(studentInfo.getUnitPhone());
 
             Map<String, Object> map = new HashMap<>();
             map.put("studentInfo", studentInfo);
@@ -90,7 +90,7 @@ public class InternshipGradeService implements IInternshipGradeService {
                 studentData.put("internshipGrade", internshipGrade);
 
                 // 查询该学生对应的指导老师
-                UnitUser unitUser = (UnitUser) unitUserRepository.findByName(studentInfo.getUnitName());
+                UnitUser unitUser = (UnitUser) unitUserRepository.findByPhone(studentInfo.getUnitPhone());
                 studentData.put("unitUser", unitUser);
 
                 // 加入到列表
@@ -119,6 +119,58 @@ public class InternshipGradeService implements IInternshipGradeService {
         } catch (Exception e) {
             logUtil.error(InternshipGradeService.class, "保存成绩失败", e);
             return ResponseMessage.error("保存成绩失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> getUnitInfo(String phone) {
+        try {
+            UnitUser unitUser = unitUserRepository.findByPhone(phone);// 通过公司用户手机号获取公司名称
+
+            if (unitUser == null) {
+                return ResponseMessage.error("获取公司实习人员名单失败(查询不到公司信息)");
+            }
+//            通过公司用户手机号查找公司用户（学生）
+            List<StudentInfo> studentInfoList = studentInfoRepository.findByUnitPhone((unitUser.getPhone()));
+//            查找学生老师信息
+
+            if (studentInfoList == null) {
+                return ResponseMessage.error("获取公司实习人员名单失败(查询不到公司学生)");
+            }
+
+            // 存储学生信息及相关数据
+            List<Map<String, Object>> studentDataList = new ArrayList<>();
+
+            System.out.println("公司"+unitUser);
+            System.out.println("学生"+studentInfoList);
+            // 遍历学生列表
+            for (StudentInfo studentInfo : studentInfoList) {
+                Map<String, Object> studentData = new HashMap<>();
+                studentData.put("studentInfo", studentInfo);
+
+                // 查询该学生的成绩
+                InternshipGrade internshipGrade = (InternshipGrade) internshipGradeRepository.findByStudentPhone(studentInfo.getPhone());
+                studentData.put("internshipGrade", internshipGrade);
+
+//                查询该学生老师信息
+                TeacherInfo teacherInfo = teacherInfoRepository.findByPhone(studentInfo.getTeacherPhone());
+                studentData.put("teacherInfo", teacherInfo);
+
+                // 查询该学生对应的指导老师
+//                UnitUser unitUser = (UnitUser) unitUserRepository.findByName(studentInfo.getUnitName());
+                studentData.put("unitUser", unitUser);
+
+                System.out.println("该学生信息：" + studentData);
+
+                // 加入到列表
+                studentDataList.add(studentData);
+            }
+
+            return ResponseMessage.success("获取公司实习人员名单", studentDataList);
+
+        } catch (Exception e) {
+            logUtil.error(InternshipGrade.class, "获取公司实习人员名单失败", e);
+            return ResponseMessage.error("获取公司实习人员名单失败");
         }
     }
 }

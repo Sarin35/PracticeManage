@@ -25,6 +25,9 @@ public class InternshipGradeController {
             return internshipGradeService.getAllInfo(lists.get("phone"));
         } else if (lists.get("role").equals("TEACHER")) {
             return internshipGradeService.getTeacherinfo(lists.get("phone"));
+        } else if (lists.get("role").equals("UNIT")) {
+            System.out.println("身份为UNIT，执行...");
+            return internshipGradeService.getUnitInfo(lists.get("phone"));
         }
         return ResponseMessage.error("非合法身份");
     }

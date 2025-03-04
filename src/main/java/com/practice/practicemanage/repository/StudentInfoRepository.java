@@ -1,7 +1,7 @@
 package com.practice.practicemanage.repository;
 
 import com.practice.practicemanage.pojo.StudentInfo;
-import org.springframework.data.domain.Limit;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +14,9 @@ public interface StudentInfoRepository extends JpaRepository<StudentInfo, Intege
 
 
     List<StudentInfo> findByTeacherPhone(String teacherPhone);
+
+    List<StudentInfo> findByUnitName(String unitName);
+
+    List<StudentInfo> findByUnitPhone(@Size(max = 20) String unitPhone);
+
 }
