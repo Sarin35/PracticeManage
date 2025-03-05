@@ -3,6 +3,7 @@ package com.practice.practicemanage.service.impl;
 import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
+import com.practice.practicemanage.response.ResponseMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -61,4 +62,8 @@ public interface IUserService {
      * @return
      */
     User findUser(String userName, String password);
+
+    ResponseMessage<Object> getRoles();
+
+    ResponseMessage<Object> getRolesDelete(Integer id);
 }

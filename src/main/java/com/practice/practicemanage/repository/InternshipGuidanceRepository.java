@@ -21,4 +21,12 @@ public interface InternshipGuidanceRepository extends JpaRepository<InternshipGu
     @Transactional
     @Query("UPDATE InternshipGuidance a SET a.status = :status WHERE a.id = :id")
     int updateStatusById(@Param("id") Integer id, @Param("status") Integer status);
+
+    @Query("SELECT y FROM InternshipGuidance y WHERE " +
+            "(y.unitName = :unitName OR :unitName IS NULL) AND " +
+            "(y.guidanceTitle LIKE %:guidanceTitle% OR :guidanceTitle IS NULL) AND " +
+            "y.status != 0")
+    Page<InternshipGuidance> searchByUnitNameAndTitles(@Param("unitName") String unitName,
+                                              @Param("guidanceTitle") String guidanceTitle,
+                                              Pageable pageable);
 }

@@ -49,6 +49,14 @@ public class InternshipGuidanceController {
                 typeConversionUtil.toInteger(map.get("status")));  // 每页数据条数
     }
 
+    @PostMapping("/selectFilterSpUnit")
+    public ResponseMessage<Object> selectFilterSpUnits(@RequestBody Map<String, String> map) {
+        return internshipGuidanceService.selectFilterSpUnit(map.get("titles"),
+                typeConversionUtil.toInteger(map.get("page")),  // 当前页数
+                typeConversionUtil.toInteger(map.get("limit")),  // 每页数据条数
+                map.get("phone"));  // 每页数据条数
+    }
+
     @PostMapping("/updateStatusPut")
     public ResponseMessage<Object> updateStatusPuts(@RequestBody Map<String, Integer> map) {
         return internshipGuidanceService.updateStatusPut(map.get("id"), map.get("status"));

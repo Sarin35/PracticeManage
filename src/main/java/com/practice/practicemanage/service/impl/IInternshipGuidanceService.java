@@ -16,4 +16,6 @@ public interface IInternshipGuidanceService {
     ResponseMessage<Object> updateStatusPut(Integer id, Integer status);
 
     ResponseMessage<Object> savaCreatequidances(InternshipGuidanceIdDto internshipGuidanceDto);
+
+    ResponseMessage<Object> selectFilterSpUnit(String titles, Integer page, Integer limit, String phone);
 }

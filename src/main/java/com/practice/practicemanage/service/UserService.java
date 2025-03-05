@@ -5,6 +5,7 @@ import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.repository.RoleRepository;
 import com.practice.practicemanage.repository.UserRepository;
+import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.security.CustomUserDetails;
 import com.practice.practicemanage.service.impl.IUserService;
 import com.practice.practicemanage.utils.JwtUtil;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service // 配置为 spring 的 bean
@@ -185,6 +185,34 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             logUtil.error(UserService.class, "查询用户失败", e);
             return null;
+        }
+    }
+
+//    管理员部分
+
+    @Override
+    public ResponseMessage<Object> getRoles() {
+        try {
+            List<User> userL = userRepository.findByStatus((byte) 4);
+            if (userL == null) {
+                return ResponseMessage.error("获取管理信息失败");
+            }
+
+            return ResponseMessage.success("获取管理员信息", userL);
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "获取管理信息失败", e);
+            return ResponseMessage.error("获取管理信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> getRolesDelete(Integer id) {
+        try {
+            userRepository.updateStatusToZeroById(id);
+            return ResponseMessage.success("删除用户成功");
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "删除用户失败", e);
+            return ResponseMessage.error("删除用户失败");
         }
     }
 

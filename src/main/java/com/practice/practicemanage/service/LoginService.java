@@ -52,7 +52,7 @@ public class LoginService implements ILoginService {
         System.out.println("userName: " + userName + " password: " + password);
         User user = userService.findUser(userName, password);
         System.out.println("查询："+user);
-        if (user == null) {
+        if (user == null || user.getStatus() == 0) {
             logUtil.error(LoginService.class, "用户名或密码错误");
             return ResponseMessage.error("用户名或密码错误");
         }

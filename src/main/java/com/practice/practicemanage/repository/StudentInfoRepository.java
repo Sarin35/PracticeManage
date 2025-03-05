@@ -1,9 +1,13 @@
 package com.practice.practicemanage.repository;
 
 import com.practice.practicemanage.pojo.StudentInfo;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +16,10 @@ public interface StudentInfoRepository extends JpaRepository<StudentInfo, Intege
 
     Object findByPhone(String phone);
 
+    @Transactional
+    @Query("update StudentInfo u set u.status = 0 where u.id = :id")
+    @Modifying
+    void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
 
     List<StudentInfo> findByTeacherPhone(String teacherPhone);
 

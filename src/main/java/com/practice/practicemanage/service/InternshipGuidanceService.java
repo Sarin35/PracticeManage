@@ -11,6 +11,7 @@ import com.practice.practicemanage.response.PaginatedResponse;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.IInternshipGuidanceService;
 import com.practice.practicemanage.utils.LogUtil;
+import com.practice.practicemanage.utils.TypeConversionUtil;
 import com.sun.java.accessibility.util.GUIInitializedListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class InternshipGuidanceService implements IInternshipGuidanceService {
     private LogUtil logUtil;
     @Autowired
     private TeacherInfoRepository teacherInfoRepository;
+    @Autowired
+    private TypeConversionUtil typeConversionUtil;
 
 
     @Override
@@ -149,6 +152,22 @@ public class InternshipGuidanceService implements IInternshipGuidanceService {
         } catch (Exception e) {
             logUtil.error(GUIInitializedListener.class, "保存修改失败", e);
             return ResponseMessage.error("保存修改失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> selectFilterSpUnit(String titles, Integer page, Integer limit, String phone) {
+        try {
+            UnitUser uni = unitUserRepository.findByPhone(phone);
+            if (uni == null) {
+                return ResponseMessage.error("查询失败");
+            }
+            Pageable pageable = PageRequest.of(page - 1, limit);
+            Page<InternshipGuidance> guidances = internshipGuidanceRepository.searchByUnitNameAndTitles(uni.getName(), titles, pageable);
+            return returnPage(guidances);
+        } catch (Exception e) {
+            logUtil.error(GUIInitializedListener.class, "查询失败", e);
+            return ResponseMessage.error("查询失败");
         }
     }
 
