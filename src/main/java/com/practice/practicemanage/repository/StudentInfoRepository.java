@@ -18,10 +18,10 @@ public interface StudentInfoRepository extends JpaRepository<StudentInfo, Intege
 
     Object findByPhone(String phone);
 
-    @Transactional
-    @Query("update StudentInfo u set u.status = 0 where u.id = :id")
-    @Modifying
-    void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
+//    @Transactional
+//    @Query("update StudentInfo u set u.status = 0 where u.id = :id")
+//    @Modifying
+//    void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
 
     List<StudentInfo> findByTeacherPhone(String teacherPhone);
 
@@ -29,7 +29,7 @@ public interface StudentInfoRepository extends JpaRepository<StudentInfo, Intege
 
     List<StudentInfo> findByUnitPhone(@Size(max = 20) String unitPhone);
 
-    List<StudentInfo> findBySchool(@Size(max = 200) String school);
+//    List<StudentInfo> findBySchool(@Size(max = 200) String school);
 
     long countBySchool(@Size(max = 200) String school);
 

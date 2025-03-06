@@ -1,8 +1,6 @@
 package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.School;
-import com.practice.practicemanage.pojo.StudentInfo;
-import com.practice.practicemanage.pojo.TeacherInfo;
 import com.practice.practicemanage.repository.SchoolRepository;
 import com.practice.practicemanage.repository.StudentInfoRepository;
 import com.practice.practicemanage.repository.TeacherInfoRepository;

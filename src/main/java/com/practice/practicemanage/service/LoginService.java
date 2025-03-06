@@ -27,18 +27,18 @@ public class LoginService implements ILoginService {
     private RedisUtil redisUtil;
     @Autowired
     private LogUtil logUtil;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private TypeConversionUtil typeConversionUtil;
+//    @Autowired
+//    private UserRepository userRepository;
+//    @Autowired
+//    private TypeConversionUtil typeConversionUtil;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private StudentInfoService studentInfoService;
     @Autowired
-    private TeacherInfoRepository teacherInfoRepository;
-    @Autowired
-    private UnitUserRepository unitUserRepository;
+//    private TeacherInfoRepository teacherInfoRepository;
+//    @Autowired
+//    private UnitUserRepository unitUserRepository;
 
     @Override
     public ResponseMessage<Object> login(UserLoginDto users) {

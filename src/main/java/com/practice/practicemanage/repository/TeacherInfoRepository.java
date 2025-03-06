@@ -15,12 +15,12 @@ public interface TeacherInfoRepository extends JpaRepository<TeacherInfo, Intege
 
     TeacherInfo findByPhone(String phone);
 
-    @Transactional
-    @Query("update TeacherInfo u set u.status = 0 where u.id = :id")
-    @Modifying
-    void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
-
-    List<TeacherInfo> findBySchool(String school);
+//    @Transactional
+//    @Query("update TeacherInfo u set u.status = 0 where u.id = :id")
+//    @Modifying
+//    void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
+//
+//    List<TeacherInfo> findBySchool(String school);
     
     long countBySchool(String school);
 
