@@ -11,4 +11,6 @@ public interface UnitUserRepository extends JpaRepository<UnitUser, Integer> {
     List<UnitUser> findByName(String name);
 
     UnitUser findByPhone(String phone);
+
+    long countByName(String name);
 }

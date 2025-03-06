@@ -6,5 +6,5 @@ public interface IStudentInfoService {
 
     Object getTeacherPhoneByStudentPhone(String Phone);
 
-    ResponseMessage<Object> getStudent();
+    ResponseMessage<Object> getStudent(Integer page, Integer limit);
 }

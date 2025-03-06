@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface TeacherInfoRepository extends JpaRepository<TeacherInfo, Integer> {
 
@@ -18,4 +20,9 @@ public interface TeacherInfoRepository extends JpaRepository<TeacherInfo, Intege
     @Modifying
     void updateStatusToZeroById(@NotNull(message = "id不能为空") Integer id);
 
+    List<TeacherInfo> findBySchool(String school);
+    
+    long countBySchool(String school);
+
+    List<TeacherInfo> findByStatus(Byte status);
 }

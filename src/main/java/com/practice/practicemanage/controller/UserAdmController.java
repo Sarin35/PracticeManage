@@ -43,8 +43,8 @@ public class UserAdmController {
     }
 
     @PostMapping("/getStudent")
-    public ResponseMessage<Object> getStudent() {
-        return studentInfoService.getStudent();
+    public ResponseMessage<Object> getStudent(@RequestBody Map<String, Integer> map) {
+        return studentInfoService.getStudent(map.get("page"), map.get("limit"));
     }
 
     @PostMapping("/getUnit")

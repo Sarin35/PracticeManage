@@ -118,7 +118,7 @@ public class LoginService implements ILoginService {
     public ResponseMessage<Object> infoByToken(String token, List<Menu> menuList) {
         try {
             logUtil.info(LoginService.class, "获取用户信息");
-            User user = (User) redisUtil.get("TOKEN_"+token+jwtUtil.extractUsername(token));
+            User user = (User) redisUtil.get("REFRESHTOKEN_"+token+jwtUtil.extractUsername(token));
             if (user == null) {
                 logUtil.error(LoginService.class, "用户不存在");
                 return ResponseMessage.error("用户不存在");

@@ -31,7 +31,7 @@ public class TeacherInfoService implements ITeacherInfoService {
     @Override
     public ResponseMessage<Object> getTeacher() {
         try {
-            List<TeacherInfo> teacherInfos = teacherInfoRepository.findAll();
+            List<TeacherInfo> teacherInfos = teacherInfoRepository.findByStatus((byte) 1);
             if (teacherInfos.isEmpty()) {
                 return ResponseMessage.error("获取老师信息失败");
             }

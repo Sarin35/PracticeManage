@@ -3,6 +3,8 @@ package com.practice.practicemanage.repository;
 import com.practice.practicemanage.pojo.StudentInfo;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +29,13 @@ public interface StudentInfoRepository extends JpaRepository<StudentInfo, Intege
 
     List<StudentInfo> findByUnitPhone(@Size(max = 20) String unitPhone);
 
+    List<StudentInfo> findBySchool(@Size(max = 200) String school);
+
+    long countBySchool(@Size(max = 200) String school);
+
+    long countByUnitName(@Size(max = 200) String unitName);
+
+//    List<StudentInfo> findByStatus(Byte status);
+
+    Page<StudentInfo> findByStatus(Byte status, Pageable pageable);
 }
