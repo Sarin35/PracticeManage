@@ -1,8 +1,9 @@
 package com.practice.practicemanage.service.impl;
 
 import com.practice.practicemanage.pojo.Menu;
-import com.practice.practicemanage.pojo.dto.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
+import com.practice.practicemanage.pojo.dto.UserLoginDto;
+import com.practice.practicemanage.pojo.dto.UserRegisterDto;
 import com.practice.practicemanage.response.ResponseMessage;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public interface ILoginService {
      * @param user
      * @return
      */
-    ResponseMessage<Object> register(UserDto user);
+    ResponseMessage<Object> register(UserRegisterDto user);
 
     /**
      * 获取用户信息
@@ -39,4 +40,6 @@ public interface ILoginService {
      * @return
      */
     ResponseMessage<Object> infoByToken(String token, List<Menu> menuList);
+
+    ResponseMessage<Object> getScoolORUnitList(Integer type);
 }

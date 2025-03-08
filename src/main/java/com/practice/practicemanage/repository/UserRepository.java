@@ -2,6 +2,7 @@ package com.practice.practicemanage.repository;
 
 import com.practice.practicemanage.pojo.User;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +31,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByStatus(@NotNull(message = "状态不能为空") Byte status);
 
 
+    User findByPhone(@Pattern(regexp = "^1((3[0-9])|(4[5-9])|(5[0-3,5-9])|(6[5,6])|(7[0-9])|(8[0-9])|(9[1,8,9]))\\d{8}$", message = "手机号格式不正确") String phone);
 }

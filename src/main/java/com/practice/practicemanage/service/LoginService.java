@@ -1,12 +1,10 @@
 package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.*;
-import com.practice.practicemanage.pojo.dto.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
-import com.practice.practicemanage.repository.RoleRepository;
-import com.practice.practicemanage.repository.TeacherInfoRepository;
-import com.practice.practicemanage.repository.UnitUserRepository;
-import com.practice.practicemanage.repository.UserRepository;
+import com.practice.practicemanage.pojo.dto.UserLoginDto;
+import com.practice.practicemanage.pojo.dto.UserRegisterDto;
+import com.practice.practicemanage.repository.*;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.ILoginService;
 import com.practice.practicemanage.utils.*;
@@ -36,9 +34,17 @@ public class LoginService implements ILoginService {
     @Autowired
     private StudentInfoService studentInfoService;
     @Autowired
-//    private TeacherInfoRepository teacherInfoRepository;
-//    @Autowired
-//    private UnitUserRepository unitUserRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private StudentInfoRepository studentInfoRepository;
+    @Autowired
+    private TeacherInfoRepository teacherInfoRepository;
+    @Autowired
+    private UnitUserRepository unitUserRepository;
+    @Autowired
+    private SchoolRepository schoolRepository;
+    @Autowired
+    private UnitRepository unitRepository;
 
     @Override
     public ResponseMessage<Object> login(UserLoginDto users) {
@@ -77,6 +83,12 @@ public class LoginService implements ILoginService {
         return ResponseMessage.success("登录成功", map);
     }
 
+//    @Autowired
+//    private TeacherInfoRepository teacherInfoRepository;
+//    @Autowired
+//    private UnitUserRepository unitUserRepository;
+
+
     @Override
     public ResponseMessage<Object> logouts(String token, String refreshToken) {
         try {
@@ -97,21 +109,66 @@ public class LoginService implements ILoginService {
     }
 
     @Override
-    public ResponseMessage<Object> register(UserDto user) {
+    public ResponseMessage<Object> register(UserRegisterDto user) {
         try {
-            if (userService.findUser(user.getUserName(), null) != null) {
+            if (userRepository.findByUserName(user.getUserName()) != null) {
+                System.out.println("用户名已存在");
                 return ResponseMessage.error("用户名已存在");
             }
-
-            User addUser = userService.add(user);
-            if (addUser == null){
-                return ResponseMessage.error("注册失败");
+            if (userRepository.findByPhone(user.getPhone()) != null) {
+                System.out.println("手机号已存在");
+                return ResponseMessage.error("手机号已存在");
             }
+//            保存用户信息（登录用）
+            System.out.println("addAll");
+            addAll(user);
+//            根据身份写入不同表
+            if (user.getStatus() == '1' || user.getStatus() == 1) {
+//                保存学生信息
+                System.out.println("studentInfo11111");
+                StudentInfo studentInfo = new StudentInfo();
+                studentInfo.setPhone(user.getPhone());
+                studentInfo.setSchool(user.getSchool());
+                studentInfo.setStatus((byte) 1);
+                studentInfoRepository.save(studentInfo);
+
+            } else if (user.getStatus() == '2' || user.getStatus() == 2) {
+                System.out.println("teacherInfo22222");
+                TeacherInfo teacherInfo = new TeacherInfo();
+                teacherInfo.setPhone(user.getPhone());
+                teacherInfo.setStatus((byte) 1);
+                teacherInfo.setSchool(user.getSchool());
+                teacherInfoRepository.save(teacherInfo);
+
+            } else if (user.getStatus() == '3' || user.getStatus() == 3) {
+                System.out.println("unitUser33333");
+                UnitUser unitUser = new UnitUser();
+                unitUser.setPhone(user.getPhone());
+                unitUser.setStatus((byte) 1);
+                unitUser.setName(user.getSchool());
+                unitUserRepository.save(unitUser);
+
+            }
+
+//            User addUser = userService.add(user);
+//            if (addUser == null){
+//                return ResponseMessage.error("注册失败");
+//            }
             return ResponseMessage.success("注册成功");
         }catch (Exception e){
             logUtil.error(LoginService.class, "注册失败", e);
             return ResponseMessage.error("注册失败");
         }
+    }
+
+    public void addAll(UserRegisterDto user) {
+//        保存用户账号密码（登录用）
+        User users = new User();
+        users.setUserName(user.getUserName());
+        users.setPassWord(PasswordUtil.comparePassword(user.getPassWord()));
+        users.setPhone(user.getPhone());
+        users.setStatus(user.getStatus());
+        userRepository.save(users);
     }
 
     @Override
@@ -157,6 +214,30 @@ public class LoginService implements ILoginService {
         } catch (Exception e) {
             logUtil.error(LoginService.class, "获取用户信息失败", e);
             return ResponseMessage.error("获取用户信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> getScoolORUnitList(Integer type) {
+        try {
+            if (type == 1 || type == 2) {
+                List<School> schools = schoolRepository.findByStatus((byte) 1);
+                if (schools.isEmpty()) {
+                    return ResponseMessage.error("获取学校信息失败");
+                }
+                return ResponseMessage.success("获取学校信息成功", schools);
+            } else if (type == 3) {
+                List<Unit> units = unitRepository.findByStatus((byte) 1);
+                if (units.isEmpty()) {
+                    return ResponseMessage.error("获取单位信息失败");
+                }
+                return ResponseMessage.success("获取单位信息成功", units);
+            } else {
+                return ResponseMessage.success("注册管理员，无需获取", null);
+            }
+        } catch (Exception e) {
+            logUtil.error(LoginService.class, "获取信息失败", e);
+            return ResponseMessage.error("获取信息失败");
         }
     }
 

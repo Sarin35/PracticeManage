@@ -1,9 +1,10 @@
 package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.pojo.Menu;
-import com.practice.practicemanage.pojo.dto.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.TokenDto;
 import com.practice.practicemanage.pojo.dto.UserDto;
+import com.practice.practicemanage.pojo.dto.UserLoginDto;
+import com.practice.practicemanage.pojo.dto.UserRegisterDto;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.LoginService;
 import com.practice.practicemanage.service.MenuService;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping
@@ -37,7 +39,8 @@ public class LoginController {
 //    }
 
     @PostMapping("/register")
-    public ResponseMessage<Object> register(@Validated @RequestBody UserDto user){
+    public ResponseMessage<Object> register(@Validated @RequestBody UserRegisterDto user){
+        System.out.println("user->>>: " + user);
         return loginService.register(user);
     }
 
@@ -46,5 +49,10 @@ public class LoginController {
         logUtil.info(LoginController.class, "获取用户信息and菜单信息infoByToken");
         List<Menu> menuList = menuService.getMenuList();
         return loginService.infoByToken(token.getToken(), menuList);
+    }
+
+    @PostMapping("/getScoolORUnitList")
+    public ResponseMessage<Object> getScoolORUnitList(@RequestBody Map<String, Integer> map){
+        return loginService.getScoolORUnitList(map.get("type"));
     }
 }

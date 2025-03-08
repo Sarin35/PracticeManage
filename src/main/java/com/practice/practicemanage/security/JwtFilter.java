@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 //        System.out.println("token Request token: " + token);  // 打印请求方法
 
         // 跳过登录和注册请求，不进行JWT验证
-        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register")) {
+        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register") || request.getRequestURI().equals("/getScoolORUnitList")) {
             filterChain.doFilter(request, response);
             return;
         }

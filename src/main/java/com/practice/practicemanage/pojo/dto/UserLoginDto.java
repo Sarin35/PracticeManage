@@ -1,13 +1,12 @@
 package com.practice.practicemanage.pojo.dto;
 
-import com.practice.practicemanage.pojo.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link User}
+ * DTO for {@link com.practice.practicemanage.pojo.User}
  */
 @Value
 public class UserLoginDto implements Serializable {

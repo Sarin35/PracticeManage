@@ -35,4 +35,7 @@ public class User {
     @NotNull(message = "状态不能为空")
     private Byte status;
 
+    @Transient
+    private String units;
+
 }

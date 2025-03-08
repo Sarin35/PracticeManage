@@ -47,7 +47,7 @@ public class SecurityConfig {
         http.csrf(CsrfConfigurer::disable) // 基于token，不需要csrf
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 基于token，不需要session
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/login",  "/register").permitAll() // 放行登录和注册请求
+                        .requestMatchers("/login",  "/register", "/getScoolORUnitList").permitAll() // 放行登录和注册请求
                         .requestMatchers("/adm/**").hasRole("ADMINISTRATOR") // 需要 ADMIN 角色
                         .requestMatchers(HttpMethod.OPTIONS).permitAll() // 放行跨域请求的预检请求
                         .anyRequest().authenticated() // 其他请求都需要认证
