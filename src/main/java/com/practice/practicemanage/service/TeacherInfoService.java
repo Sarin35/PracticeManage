@@ -1,10 +1,12 @@
 package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.TeacherInfo;
+import com.practice.practicemanage.pojo.dto.TeacherInfoDto;
 import com.practice.practicemanage.repository.TeacherInfoRepository;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.ITeacherInfoService;
 import com.practice.practicemanage.utils.LogUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,19 @@ public class TeacherInfoService implements ITeacherInfoService {
         } catch (Exception e) {
             logUtil.error(TeacherInfoService.class, "获取老师信息失败", e);
             return ResponseMessage.error("获取老师信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> saveTeacherInfo(TeacherInfoDto teacherDto) {
+        try {
+            TeacherInfo teacherInfo = new TeacherInfo();
+            BeanUtils.copyProperties(teacherDto, teacherInfo);
+            teacherInfoRepository.save(teacherInfo);
+            return ResponseMessage.success("保存老师信息成功");
+        } catch (Exception e) {
+            logUtil.error(TeacherInfoService.class, "保存老师信息失败", e);
+            return ResponseMessage.error("保存老师信息失败");
         }
     }
 }

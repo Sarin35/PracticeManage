@@ -1,12 +1,14 @@
 package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.Unit;
+import com.practice.practicemanage.pojo.dto.UnitDto;
 import com.practice.practicemanage.repository.StudentInfoRepository;
 import com.practice.practicemanage.repository.UnitRepository;
 import com.practice.practicemanage.repository.UnitUserRepository;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.IUnitService;
 import com.practice.practicemanage.utils.LogUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +66,19 @@ public class UnitService implements IUnitService {
         } catch (Exception e) {
             logUtil.error(UserService.class, "删除公司失败", e);
             return ResponseMessage.error("删除公司失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> addUnit(UnitDto unitDto) {
+        try {
+            Unit unit = new Unit();
+            BeanUtils.copyProperties(unitDto, unit);
+            unitRepository.save(unit);
+            return ResponseMessage.success("添加公司成功");
+        } catch (Exception e) {
+            logUtil.error(UnitService.class, "添加公司失败", e);
+            return ResponseMessage.error("添加公司失败");
         }
     }
 }

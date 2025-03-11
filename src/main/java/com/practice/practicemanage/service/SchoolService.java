@@ -1,12 +1,14 @@
 package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.School;
+import com.practice.practicemanage.pojo.dto.SchoolDto;
 import com.practice.practicemanage.repository.SchoolRepository;
 import com.practice.practicemanage.repository.StudentInfoRepository;
 import com.practice.practicemanage.repository.TeacherInfoRepository;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.ISchoolService;
 import com.practice.practicemanage.utils.LogUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +69,19 @@ public class SchoolService implements ISchoolService {
         } catch (Exception e) {
             logUtil.error(UserService.class, "删除学校失败", e);
             return ResponseMessage.error("删除学校失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> addSchool(SchoolDto schoolDto) {
+        try {
+            School school = new School();
+            BeanUtils.copyProperties(schoolDto, school);
+            schoolRepository.save(school);
+            return ResponseMessage.success("添加学校成功");
+        } catch (Exception e) {
+            logUtil.error(SchoolService.class, "添加学校失败", e);
+            return ResponseMessage.error("添加学校失败");
         }
     }
 }

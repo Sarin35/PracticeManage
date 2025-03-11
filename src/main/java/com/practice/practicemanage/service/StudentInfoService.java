@@ -1,11 +1,13 @@
 package com.practice.practicemanage.service;
 
 import com.practice.practicemanage.pojo.StudentInfo;
+import com.practice.practicemanage.pojo.dto.StudentInfoDto;
 import com.practice.practicemanage.repository.StudentInfoRepository;
 import com.practice.practicemanage.response.PaginatedResponse;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.impl.IStudentInfoService;
 import com.practice.practicemanage.utils.LogUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +46,19 @@ public class StudentInfoService implements IStudentInfoService {
         } catch (Exception e) {
             logUtil.error(StudentInfoService.class, "获取学生信息失败", e);
             return ResponseMessage.error("获取学生信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> saveStudentInfo(StudentInfoDto studentDto) {
+        try {
+            StudentInfo studentInfo = new StudentInfo();
+            BeanUtils.copyProperties(studentDto, studentInfo);
+            studentInfoRepository.save(studentInfo);
+            return ResponseMessage.success("保存学生信息成功");
+        } catch (Exception e) {
+            logUtil.error(StudentInfoService.class, "保存学生信息失败", e);
+            return ResponseMessage.error("保存学生信息失败");
         }
     }
 

@@ -1,10 +1,9 @@
 package com.practice.practicemanage.service;
 
-import com.practice.practicemanage.pojo.User;
+import com.practice.practicemanage.pojo.*;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
-import com.practice.practicemanage.repository.RoleRepository;
-import com.practice.practicemanage.repository.UserRepository;
+import com.practice.practicemanage.repository.*;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.security.CustomUserDetails;
 import com.practice.practicemanage.service.impl.IUserService;
@@ -22,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,11 +42,19 @@ public class UserService implements IUserService {
     private JwtUtil jwtUtil;
     @Autowired
     private TypeConversionUtil typeConversionUtil;
+    @Autowired
+    private StudentInfoRepository studentInfoRepository;
+    @Autowired
+    private TeacherInfoRepository teacherInfoRepository;
+    @Autowired
+    private UnitUserRepository unitUserRepository;
+    @Autowired
+    private AnnouncementRepository announcementRepository;
 
     //    test -------------------------------------------------------------------------------------------------------------
 
-    @Override
     @Cacheable(value = "userList")
+    @Override
     public List<User> userList() {
         try {
             return userRepository.findAll();
@@ -213,6 +221,108 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             logUtil.error(UserService.class, "删除用户失败", e);
             return ResponseMessage.error("删除用户失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> getLoginIndex(String phone, String role) {
+        try {
+            switch (role) {
+                case "STUDENT" -> {
+                    Object student = studentInfoRepository.findByPhone(phone);
+                    return ResponseMessage.success("获取学生信息成功", student);
+                } case "TEACHER" -> {
+                    TeacherInfo teacherInfo = teacherInfoRepository.findByPhone(phone);
+                    return ResponseMessage.success("获取老师信息成功", teacherInfo);
+                }
+                case "UNIT" -> {
+                    UnitUser unitUser = unitUserRepository.findByPhone(phone);
+                    return ResponseMessage.success("获取单位信息成功", unitUser);
+                }
+                default -> {
+                    User user = userRepository.findByPhone(phone);
+                    return ResponseMessage.success("返回用户信息成功", user);
+                }
+            }
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "获取用户信息失败", e);
+            return ResponseMessage.error("获取用户信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> saveLoginIndexSave(UserIdDto userIdDto) {
+        try {
+            User user = new User();
+            BeanUtils.copyProperties(userIdDto, user);
+            userRepository.save(user);
+            return ResponseMessage.success("保存用户信息成功");
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "保存用户信息失败", e);
+            return ResponseMessage.error("保存用户信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> findNotices(String phone) {
+        try {
+            StudentInfo student = (StudentInfo) studentInfoRepository.findByPhone(phone);
+            if (student == null) {
+                return ResponseMessage.error("获取学生信息失败");
+            }
+            List<String> phones = Arrays.asList(student.getTeacherPhone(), student.getUnitPhone());
+//            List<Integer> status = Arrays.asList(0, 3);
+            List<Announcement> announcementList = announcementRepository.findByPublisherInAndStatus(phones,2);
+            if (announcementList.isEmpty()) {
+                return ResponseMessage.error("无公告或获取公告失败");
+            }
+            return ResponseMessage.success("获取公告成功", announcementList);
+
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "获取公告失败", e);
+            return ResponseMessage.error("获取公告失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> findNoticesTN(String phone) {
+        try {
+            List<Announcement> announcementList = announcementRepository.findByPublisherAndStatus(phone, 2);
+            if (announcementList.isEmpty()) {
+                return ResponseMessage.error("无公告或获取公告失败");
+            }
+            return ResponseMessage.success("获取公告成功", announcementList);
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "获取公告失败", e);
+            return ResponseMessage.error("获取公告失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> findNoticesA() {
+        try {
+            List<Announcement> announcementList = announcementRepository.findByStatus(2);
+            if (announcementList.isEmpty()) {
+                return ResponseMessage.error("无公告或获取公告失败");
+            }
+            return ResponseMessage.success("获取公告成功", announcementList);
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "获取公告失败", e);
+            return ResponseMessage.error("获取公告失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> findNoticesSys() {
+        try {
+            List<Announcement> announcementList = announcementRepository.findByStatus(1);
+            if (announcementList.isEmpty()) {
+                return ResponseMessage.error("无公告或获取公告失败");
+            }
+            return ResponseMessage.success("获取公告成功", announcementList);
+        } catch (Exception e) {
+            logUtil.error(UserService.class, "获取公告失败", e);
+            return ResponseMessage.error("获取公告失败");
         }
     }
 
