@@ -1,7 +1,11 @@
 package com.practice.practicemanage.service.impl;
 
+import com.practice.practicemanage.pojo.StudentInfo;
+import com.practice.practicemanage.pojo.TeacherInfo;
 import com.practice.practicemanage.pojo.WeeklyReport;
 import com.practice.practicemanage.pojo.dto.WeeklyReportDto;
+import com.practice.practicemanage.repository.StudentInfoRepository;
+import com.practice.practicemanage.repository.TeacherInfoRepository;
 import com.practice.practicemanage.repository.WeeklyReportRepository;
 import com.practice.practicemanage.response.PaginatedResponse;
 import com.practice.practicemanage.response.ResponseMessage;
@@ -24,6 +28,10 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     private WeeklyReportRepository weeklyReportRepository;
     @Autowired
     private LogUtil logUtil;
+    @Autowired
+    private StudentInfoRepository studentInfoRepository;
+    @Autowired
+    private TeacherInfoRepository teacherInfoRepository;
 
     @Override
     public ResponseMessage<Object> getMyWeekReport(String studentPhone, String teacherPhone, int page, int limit, byte status) {
@@ -163,6 +171,8 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
         for (WeeklyReport weeklyReport : weeklyReportList) {
             if (weeklyReport.getPuttime() != null) {
                 weeklyReport.setPuttime(Instant.ofEpochSecond(weeklyReport.getPuttime().toEpochMilli()));  // 转换为时间戳（毫秒）
+                weeklyReport.setStudent((StudentInfo) studentInfoRepository.findByPhone(weeklyReport.getStudentPhone()));
+                weeklyReport.setTeacher(teacherInfoRepository.findByPhone(weeklyReport.getTeacherPhone()));
             }
         }
 

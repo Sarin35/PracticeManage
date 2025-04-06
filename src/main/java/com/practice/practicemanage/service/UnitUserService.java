@@ -7,4 +7,6 @@ public interface UnitUserService {
     ResponseMessage<Object> saveUnitInfo(UnitUserDto unitDto);
 
     ResponseMessage<Object> getUnitTeacher();
+
+    ResponseMessage<Object> getunitTeacher(String unitName);
 }

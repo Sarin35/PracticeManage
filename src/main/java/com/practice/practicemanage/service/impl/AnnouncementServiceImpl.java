@@ -50,7 +50,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             Pageable pageable = PageRequest.of(page - 1, limit);
             Page<Announcement> all = announcementRepository.findByPublisherAndStatusNot(phone, 0,  pageable);
             if (all.isEmpty()){
-                return ResponseMessage.error("获取公告失败");
+                return ResponseMessage.success("无发布信息", null);
             }
             return returnPage(all);
         } catch (Exception e) {

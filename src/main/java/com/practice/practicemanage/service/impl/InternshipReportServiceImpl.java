@@ -57,7 +57,7 @@ public class InternshipReportServiceImpl implements InternshipReportService {
 
                 Pageable reportPage = PageRequest.of(page -1, limit);
 
-                Page<InternshipReport> internshipReports = internshipReportRepository.findByTeacherPhoneAndStatusNot(phone, (byte) 0, reportPage);
+                Page<InternshipReport> internshipReports = internshipReportRepository.findByTeacherPhoneAndStatus(phone, (byte) 1, reportPage);
 
                 return returnPage(internshipReports);
 

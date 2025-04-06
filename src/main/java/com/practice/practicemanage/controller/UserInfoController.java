@@ -6,6 +6,7 @@ import com.practice.practicemanage.pojo.dto.TeacherInfoDto;
 import com.practice.practicemanage.pojo.dto.UnitUserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
+import com.practice.practicemanage.service.UnitService;
 import com.practice.practicemanage.service.impl.StudentInfoServiceImpl;
 import com.practice.practicemanage.service.impl.TeacherInfoServiceImpl;
 import com.practice.practicemanage.service.impl.UnitUserServiceImpl;
@@ -30,10 +31,32 @@ public class UserInfoController {
     private UnitUserServiceImpl unitUserService;
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private UnitService unitService;
 
     @PostMapping("/getLoginIndex")
     public ResponseMessage<Object> getLoginIndex(@RequestBody Map<String, String> map) {
         return userService.getLoginIndex(map.get("phone"), map.get("role"));
+    }
+
+    @PostMapping("/getTeacherInfo")
+    public ResponseMessage<Object> getTeacherInfo() {
+        return teacherInfoService.getTeacher();
+    }
+
+    @PostMapping("/getUnitTeacherInfo")
+    public ResponseMessage<Object> getUnitTeacherInfo() {
+        return unitUserService.getUnitTeacher();
+    }
+
+    @PostMapping("/getUnits")
+    public ResponseMessage<Object> getUnit() {
+        return unitService.getUnitList();
+    }
+
+    @PostMapping("/getUnitTeachers")
+    public ResponseMessage<Object> getUnitTeacher(@RequestBody Map<String, String> map) {
+        return unitUserService.getunitTeacher(map.get("unitName"));
     }
 
     @PostMapping("/saveLoginIndexSave")

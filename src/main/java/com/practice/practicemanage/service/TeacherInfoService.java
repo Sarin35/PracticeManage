@@ -9,4 +9,5 @@ public interface TeacherInfoService {
     ResponseMessage<Object> getTeacher();
 
     ResponseMessage<Object> saveTeacherInfo(TeacherInfoDto teacherDto);
+
 }

@@ -81,4 +81,18 @@ public class UnitServiceImpl implements UnitService {
             return ResponseMessage.error("添加公司失败");
         }
     }
+
+    @Override
+    public ResponseMessage<Object> getUnitList() {
+        try {
+            List<Unit> unitList = unitRepository.findByStatus((byte) 1);
+            if (unitList.isEmpty()) {
+                return ResponseMessage.error("获取公司列表失败");
+            }
+            return ResponseMessage.success("获取公司列表成功", unitList);
+        } catch (Exception e) {
+            logUtil.error(UnitServiceImpl.class, "获取公司列表失败", e);
+            return ResponseMessage.error("获取公司列表失败");
+        }
+    }
 }

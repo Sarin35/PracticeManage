@@ -87,8 +87,8 @@ public class AssignmentController {
                 StudentInfo studentInfo = (StudentInfo) studentInfoService.getTeacherPhoneByStudentPhone(assignment.get("phone"));
                 TeacherInfo teacherInfo = (TeacherInfo) teacherInfoService.getTeacherListByPhone(studentInfo.getTeacherPhone());
                 List<Assignment> assByPhone = assignmentService.findAssByPhone(teacherInfo.getName(), studentInfo.getTeacherPhone(), assignment.get("phone"), status); // 获取老师已发布但还未完成的作业
-                if (assByPhone.isEmpty()){
-                    return ResponseMessage.error("无作业");
+                if (assByPhone == null || assByPhone.isEmpty()){
+                    return ResponseMessage.success("无作业", null);
                 }
                 // 将 puttimes 转换为时间戳（毫秒）
                 for (Assignment assignments : assByPhone) {
@@ -102,7 +102,7 @@ public class AssignmentController {
 
                 List<Assignment> assignmentList = assignmentService.findByTeacherList(assignment.get("phone"));// 通过教师手机号 查询作业表
                 if (assignmentList.isEmpty()){
-                    return ResponseMessage.error("无作业");
+                    return ResponseMessage.success("无作业", null);
                 }
                 // 将 puttimes 转换为时间戳（毫秒）
                 for (Assignment assignments : assignmentList) {

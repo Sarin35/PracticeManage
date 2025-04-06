@@ -44,4 +44,9 @@ public class WeeklyReport {
     @JsonDeserialize(using = InstantMillisDeserializer.class) // 自定义反序列化器
     private Instant puttime;
 
+    @Transient
+    private StudentInfo student;
+
+    @Transient
+    private TeacherInfo teacher;
 }

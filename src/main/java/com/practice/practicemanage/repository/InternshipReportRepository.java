@@ -13,5 +13,7 @@ public interface InternshipReportRepository extends JpaRepository<InternshipRepo
 
     Page<InternshipReport> findByStudentPhoneAndStatusNot(@Size(max = 20) String studentPhone, @NotNull Byte status, Pageable pageable);
 
+    Page<InternshipReport> findByTeacherPhoneAndStatus(@Size(max = 20) String teacherPhone, @NotNull Byte status, Pageable pageable);
+
     Page<InternshipReport> findByTeacherPhoneAndStatusNot(@Size(max = 20) String teacherPhone, @NotNull Byte status, Pageable pageable);
 }

@@ -35,4 +35,6 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
     List<Assignment> findByTitleAndStudentPhoneNotNullAndStatus(@Size(max = 200) String title, @NotNull Byte status);
 
     Page<Assignment> findByTeacherPhoneAndStatus(@Size(max = 20) String teacherPhone, @NotNull Byte status, Pageable pageable);
+
+    List<Assignment> findByStudentPhoneAndTeacherPhoneAndStatus(@Size(max = 20) String studentPhone, @Size(max = 20) String teacherPhone, @NotNull Byte status);
 }

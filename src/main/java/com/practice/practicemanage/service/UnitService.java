@@ -9,4 +9,6 @@ public interface UnitService {
     ResponseMessage<Object> getUnitDelete(Integer id);
 
     ResponseMessage<Object> addUnit(UnitDto unitDto);
+
+    ResponseMessage<Object> getUnitList();
 }

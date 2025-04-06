@@ -21,10 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service // 配置为 spring 的 bean
 @CacheConfig(cacheNames = "user") // 配置缓存
@@ -241,8 +238,16 @@ public class UserServiceImpl implements UserService {
         try {
             switch (role) {
                 case "STUDENT" -> {
-                    Object student = studentInfoRepository.findByPhone(phone);
-                    return ResponseMessage.success("获取学生信息成功", student);
+                    StudentInfo student = (StudentInfo) studentInfoRepository.findByPhone(phone);
+//                    获取该学生所在学校的所有教师信息
+                    List<TeacherInfo> teacherInfos = teacherInfoRepository.findBySchool(student.getSchool());
+//                    获取该学生所在单位的所有单位用户信息
+                    List<UnitUser> unitUsers = unitUserRepository.findByName(student.getUnitName());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("student", student);
+                    map.put("teacherInfos", teacherInfos);
+                    map.put("unitUsers", unitUsers);
+                    return ResponseMessage.success("获取学生信息成功", map);
                 } case "TEACHER" -> {
                     TeacherInfo teacherInfo = teacherInfoRepository.findByPhone(phone);
                     return ResponseMessage.success("获取老师信息成功", teacherInfo);

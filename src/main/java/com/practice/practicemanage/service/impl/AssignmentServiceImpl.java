@@ -49,6 +49,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 
                 System.out.println("byTeacherPhoneAndStatus1:"+byTeacherPhoneAndStatus1);
                 System.out.println("byStudentPhoneAndStatus3:"+byStudentPhoneAndStatus3);
+                if (byTeacherPhoneAndStatus1.isEmpty() || byStudentPhoneAndStatus3.isEmpty()) {
+                    return Collections.emptyList(); // 如果没有作业，直接返回 空列表， 如果返回 null，调用 .isEmpty() 会报错
+                }
 // 2. 获取 byStudentPhoneAndStatus3 中所有的 title 并存入 Set 中
                 Set<String> completedTitles = byStudentPhoneAndStatus3.stream()
                         .map(Assignment::getTitle) // 获取作业的 title
@@ -67,7 +70,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 
 
             } else if (status == 3) {
-                List<Assignment> assignmentList = assignmentRepository.findByStudentPhoneAndStatus(studentPhone, status);
+                List<Assignment> assignmentList = assignmentRepository.findByStudentPhoneAndTeacherPhoneAndStatus(studentPhone, phone, status);
+                if (assignmentList.isEmpty()) {
+                    return Collections.emptyList(); // 如果没有作业，直接返回 空列表
+                }
                 for (Assignment assignment : assignmentList) {
                         assignment.setTeacger(teacher);  // 这里设置教师
                 }
@@ -75,12 +81,12 @@ public class AssignmentServiceImpl implements AssignmentService {
             } else {
                 // 如果 status 既不是 1 也不是 3，输出日志
                 logUtil.info(AssignmentServiceImpl.class, "status既不是1也不是3");
-                return null;
+                return Collections.emptyList();
             }
         } catch (Exception e) {
             // 捕获异常并记录详细日志
             logUtil.error(AssignmentServiceImpl.class, "查询作业失败", e); // 记录完整异常信息
-            return null;
+            return Collections.emptyList();
         }
     }
 
@@ -136,7 +142,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             return assignmentList;
         } catch (Exception e) {
             logUtil.error(AssignmentServiceImpl.class, "获取老师发布的作业失败", e);
-            return null;
+            return Collections.emptyList();
         }
     }
 

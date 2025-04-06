@@ -50,4 +50,10 @@ public class StudentInfo {
     @Column(name = "status")
     private Byte status;
 
+//    @Transient
+//    private String teacherName;
+//
+//    @Transient
+//    private String unitTeacherName;
+
 }

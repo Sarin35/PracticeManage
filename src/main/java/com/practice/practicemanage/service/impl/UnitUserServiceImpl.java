@@ -37,6 +37,23 @@ public class UnitUserServiceImpl implements UnitUserService {
     public ResponseMessage<Object> getUnitTeacher() {
         try {
             List<UnitUser> unitUsers = unitUserRepository.findByStatus((byte) 1);
+            if (unitUsers.isEmpty()) {
+                return ResponseMessage.error("获取企业教师信息失败");
+            }
+            return ResponseMessage.success("获取企业教师信息成功", unitUsers);
+        } catch (Exception e) {
+            logUtil.error(UnitUserServiceImpl.class, "获取单位信息失败", e);
+            return ResponseMessage.error("获取企业教师信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> getunitTeacher(String unitName) {
+        try{
+            List<UnitUser> unitUsers = unitUserRepository.findByName(unitName);
+            if (unitUsers.isEmpty()) {
+                return ResponseMessage.error("获取企业教师信息失败");
+            }
             return ResponseMessage.success("获取企业教师信息成功", unitUsers);
         } catch (Exception e) {
             logUtil.error(UnitUserServiceImpl.class, "获取单位信息失败", e);
