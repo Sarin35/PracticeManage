@@ -1,6 +1,8 @@
 package com.practice.practicemanage.service.impl;
 
 import com.practice.practicemanage.pojo.School;
+import com.practice.practicemanage.pojo.StudentInfo;
+import com.practice.practicemanage.pojo.TeacherInfo;
 import com.practice.practicemanage.pojo.dto.SchoolDto;
 import com.practice.practicemanage.repository.SchoolRepository;
 import com.practice.practicemanage.repository.StudentInfoRepository;
@@ -64,6 +66,15 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public ResponseMessage<Object> getSchoolDelete(Integer id) {
         try {
+            School school = schoolRepository.findById(id).orElseThrow(() -> new RuntimeException("学校不存在"));
+            List<TeacherInfo> teacherInfoList = teacherInfoRepository.findBySchoolAndStatus(school.getSchoolName(), (byte) 1);
+            if (!teacherInfoList.isEmpty()) {
+                return ResponseMessage.error("该学校下有在职教师，无法删除");
+            }
+            List<StudentInfo> studentInfoList = studentInfoRepository.findBySchoolAndStatus(school.getSchoolName(), (byte) 1);
+            if (!studentInfoList.isEmpty()) {
+                return ResponseMessage.error("该学校下有在校学生，无法删除");
+            }
             schoolRepository.updateStatusToZeroById(id);
             return ResponseMessage.success("删除学校成功");
         } catch (Exception e) {

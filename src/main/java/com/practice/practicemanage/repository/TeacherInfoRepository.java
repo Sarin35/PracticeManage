@@ -27,4 +27,6 @@ public interface TeacherInfoRepository extends JpaRepository<TeacherInfo, Intege
     List<TeacherInfo> findByStatus(Byte status);
 
     List<TeacherInfo> findBySchool(String school);
+
+    List<TeacherInfo> findBySchoolAndStatus(String school, Byte status);
 }

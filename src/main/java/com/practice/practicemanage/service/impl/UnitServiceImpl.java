@@ -1,8 +1,11 @@
 package com.practice.practicemanage.service.impl;
 
+import com.practice.practicemanage.pojo.StudentInfo;
 import com.practice.practicemanage.pojo.Unit;
+import com.practice.practicemanage.pojo.UnitUser;
 import com.practice.practicemanage.pojo.dto.UnitDto;
 import com.practice.practicemanage.repository.StudentInfoRepository;
+import com.practice.practicemanage.repository.TeacherInfoRepository;
 import com.practice.practicemanage.repository.UnitRepository;
 import com.practice.practicemanage.repository.UnitUserRepository;
 import com.practice.practicemanage.response.ResponseMessage;
@@ -28,6 +31,8 @@ public class UnitServiceImpl implements UnitService {
     private StudentInfoRepository studentInfoRepository;
     @Autowired
     private UnitUserRepository unitUserRepository;
+    @Autowired
+    private TeacherInfoRepository teacherInfoRepository;
 
     @Override
     public ResponseMessage<Object> getUnit() {
@@ -61,6 +66,15 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public ResponseMessage<Object> getUnitDelete(Integer id) {
         try {
+            Unit unit = unitRepository.findById(id).orElseThrow(() -> new RuntimeException("公司不存在"));
+            List<UnitUser> unitUserList = unitUserRepository.findByNameAndStatus(unit.getUnitName(), (byte) 1);
+            if (!unitUserList.isEmpty()) {
+                return ResponseMessage.error("该公司下有在职人员，无法删除");
+            }
+            List<StudentInfo> studentInfoList = studentInfoRepository.findByUnitNameAndStatus(unit.getUnitName(), (byte) 1);
+            if (!studentInfoList.isEmpty()) {
+                return ResponseMessage.error("该公司下有正在实习的实习人员，无法删除");
+            }
             unitRepository.updateStatusToZeroById(id);
             return ResponseMessage.success("删除公司成功");
         } catch (Exception e) {

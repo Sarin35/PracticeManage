@@ -38,4 +38,8 @@ public interface StudentInfoRepository extends JpaRepository<StudentInfo, Intege
 //    List<StudentInfo> findByStatus(Byte status);
 
     Page<StudentInfo> findByStatus(Byte status, Pageable pageable);
+
+    List<StudentInfo> findByUnitNameAndStatus(@Size(max = 200) String unitName, Byte status);
+
+    List<StudentInfo> findBySchoolAndStatus(@Size(max = 200) String school, Byte status);
 }
