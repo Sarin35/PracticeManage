@@ -1,7 +1,7 @@
 package com.practice.practicemanage.security;
 
 import com.practice.practicemanage.pojo.User;
-import com.practice.practicemanage.service.UserService;
+import com.practice.practicemanage.service.impl.UserServiceImpl;
 import com.practice.practicemanage.utils.JwtUtil;
 import com.practice.practicemanage.utils.RedisUtil;
 import jakarta.servlet.FilterChain;
@@ -26,7 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
     @Autowired
     private RedisUtil redisUtil;
 

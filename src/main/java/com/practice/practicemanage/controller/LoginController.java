@@ -2,12 +2,11 @@ package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.pojo.Menu;
 import com.practice.practicemanage.pojo.dto.TokenDto;
-import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserLoginDto;
 import com.practice.practicemanage.pojo.dto.UserRegisterDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.LoginService;
-import com.practice.practicemanage.service.MenuService;
+import com.practice.practicemanage.service.impl.LoginServiceImpl;
+import com.practice.practicemanage.service.impl.MenuServiceImpl;
 import com.practice.practicemanage.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -23,9 +22,9 @@ public class LoginController {
     @Autowired
     private LogUtil logUtil;
     @Autowired
-    private LoginService loginService;
+    private LoginServiceImpl loginService;
     @Autowired
-    private MenuService menuService;
+    private MenuServiceImpl menuService;
 
 
     @PostMapping("/login")

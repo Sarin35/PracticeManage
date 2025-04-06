@@ -1,7 +1,7 @@
 package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.*;
+import com.practice.practicemanage.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,15 +22,17 @@ public class UserAdmController {
      */
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
     @Autowired
-    private TeacherInfoService teacherInfoService;
+    private TeacherInfoServiceImpl teacherInfoService;
     @Autowired
-    private StudentInfoService studentInfoService;
+    private UnitUserServiceImpl unitUserService;
     @Autowired
-    private UnitService unitService;
+    private StudentInfoServiceImpl studentInfoService;
     @Autowired
-    private SchoolService schoolService;
+    private UnitServiceImpl unitService;
+    @Autowired
+    private SchoolServiceImpl schoolService;
 
     @PostMapping("/getRoles")
     public ResponseMessage<Object> getRoles() {
@@ -40,6 +42,11 @@ public class UserAdmController {
     @PostMapping("/getTeacher")
     public ResponseMessage<Object> getTeacher() {
         return teacherInfoService.getTeacher();
+    }
+
+    @PostMapping("/getUnitTeacher")
+    public ResponseMessage<Object> getUnitTeacher() {
+        return unitUserService.getUnitTeacher();
     }
 
     @PostMapping("/getStudent")

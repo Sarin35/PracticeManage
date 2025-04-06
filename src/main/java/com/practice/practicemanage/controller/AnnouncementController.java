@@ -2,7 +2,7 @@ package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.pojo.dto.AnnouncementDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.AnnouncementService;
+import com.practice.practicemanage.service.impl.AnnouncementServiceImpl;
 import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class AnnouncementController {
 
     @Autowired
-    private AnnouncementService announcementService;
+    private AnnouncementServiceImpl announcementService;
     @Autowired
     private TypeConversionUtil typeConversionUtil;
 

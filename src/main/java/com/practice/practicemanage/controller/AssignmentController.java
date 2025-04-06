@@ -5,9 +5,9 @@ import com.practice.practicemanage.pojo.StudentInfo;
 import com.practice.practicemanage.pojo.TeacherInfo;
 import com.practice.practicemanage.pojo.dto.AssignmentIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.AssignmentService;
-import com.practice.practicemanage.service.StudentInfoService;
-import com.practice.practicemanage.service.TeacherInfoService;
+import com.practice.practicemanage.service.impl.AssignmentServiceImpl;
+import com.practice.practicemanage.service.impl.StudentInfoServiceImpl;
+import com.practice.practicemanage.service.impl.TeacherInfoServiceImpl;
 import com.practice.practicemanage.utils.LogUtil;
 import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,11 @@ public class AssignmentController {
 //    有一个缓存问题，已经修改了的文件，但是不会重新查询
 
     @Autowired
-    private AssignmentService assignmentService;
+    private AssignmentServiceImpl assignmentService;
     @Autowired
-    private StudentInfoService studentInfoService;
+    private StudentInfoServiceImpl studentInfoService;
     @Autowired
-    private TeacherInfoService teacherInfoService;
+    private TeacherInfoServiceImpl teacherInfoService;
     @Autowired
     private LogUtil logUtil;
     @Autowired

@@ -2,7 +2,7 @@ package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.pojo.dto.InternshipGradeDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.InternshipGradeService;
+import com.practice.practicemanage.service.impl.InternshipGradeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class InternshipGradeController {
 
     @Autowired
-    private InternshipGradeService internshipGradeService;
+    private InternshipGradeServiceImpl internshipGradeService;
 
     @PostMapping("/getInternshipGradeList")
     public ResponseMessage<Object> InternshipGrade(@Validated @RequestBody Map<String, String> lists) {

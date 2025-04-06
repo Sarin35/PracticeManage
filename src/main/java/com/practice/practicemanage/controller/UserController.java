@@ -4,7 +4,7 @@ import com.practice.practicemanage.pojo.User;
 import com.practice.practicemanage.pojo.dto.UserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.impl.IUserService;
+import com.practice.practicemanage.service.UserService;
 import com.practice.practicemanage.utils.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +25,7 @@ public class UserController {
 
 //    测试 --- 这里的数据实际上应该写入到service层
     @Autowired
-    IUserService userService;
+UserService userService;
     @Autowired
     LogUtil logUtil;
 

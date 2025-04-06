@@ -6,10 +6,10 @@ import com.practice.practicemanage.pojo.dto.TeacherInfoDto;
 import com.practice.practicemanage.pojo.dto.UnitUserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.StudentInfoService;
-import com.practice.practicemanage.service.TeacherInfoService;
-import com.practice.practicemanage.service.UnitUserService;
-import com.practice.practicemanage.service.UserService;
+import com.practice.practicemanage.service.impl.StudentInfoServiceImpl;
+import com.practice.practicemanage.service.impl.TeacherInfoServiceImpl;
+import com.practice.practicemanage.service.impl.UnitUserServiceImpl;
+import com.practice.practicemanage.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +23,13 @@ import java.util.Map;
 public class UserInfoController {
 
     @Autowired
-    private StudentInfoService studentInfoService;
+    private StudentInfoServiceImpl studentInfoService;
     @Autowired
-    private TeacherInfoService teacherInfoService;
+    private TeacherInfoServiceImpl teacherInfoService;
     @Autowired
-    private UnitUserService unitUserService;
+    private UnitUserServiceImpl unitUserService;
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @PostMapping("/getLoginIndex")
     public ResponseMessage<Object> getLoginIndex(@RequestBody Map<String, String> map) {

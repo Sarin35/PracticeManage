@@ -2,7 +2,7 @@ package com.practice.practicemanage.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.LoginService;
+import com.practice.practicemanage.service.impl.LoginServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
     @Autowired
-    private LoginService loginService;
+    private LoginServiceImpl loginService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -3,7 +3,7 @@ package com.practice.practicemanage.controller;
 
 import com.practice.practicemanage.pojo.dto.WeeklyReportDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.WeeklyReportService;
+import com.practice.practicemanage.service.impl.WeeklyReportServiceImpl;
 import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class WeekReportController {
 
     @Autowired
-    private WeeklyReportService weeklyReportService;
+    private WeeklyReportServiceImpl weeklyReportService;
     @Autowired
     private TypeConversionUtil typeConversionUtil;
 

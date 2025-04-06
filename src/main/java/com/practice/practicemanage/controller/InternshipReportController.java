@@ -3,7 +3,7 @@ package com.practice.practicemanage.controller;
 import com.practice.practicemanage.pojo.dto.InternshipReportDto;
 import com.practice.practicemanage.pojo.dto.InternshipReportIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
-import com.practice.practicemanage.service.InternshipReportService;
+import com.practice.practicemanage.service.impl.InternshipReportServiceImpl;
 import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class InternshipReportController {
 
     @Autowired
-    private InternshipReportService internshipReportService;
+    private InternshipReportServiceImpl internshipReportService;
     @Autowired
     private TypeConversionUtil typeConversionUtil;
 
