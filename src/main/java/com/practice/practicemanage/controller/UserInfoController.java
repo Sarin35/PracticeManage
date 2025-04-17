@@ -6,11 +6,9 @@ import com.practice.practicemanage.pojo.dto.TeacherInfoDto;
 import com.practice.practicemanage.pojo.dto.UnitUserDto;
 import com.practice.practicemanage.pojo.dto.UserIdDto;
 import com.practice.practicemanage.response.ResponseMessage;
+//import com.practice.practicemanage.service.InternshipGradeService;
 import com.practice.practicemanage.service.UnitService;
-import com.practice.practicemanage.service.impl.StudentInfoServiceImpl;
-import com.practice.practicemanage.service.impl.TeacherInfoServiceImpl;
-import com.practice.practicemanage.service.impl.UnitUserServiceImpl;
-import com.practice.practicemanage.service.impl.UserServiceImpl;
+import com.practice.practicemanage.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +31,8 @@ public class UserInfoController {
     private UserServiceImpl userService;
     @Autowired
     private UnitService unitService;
+    @Autowired
+    private InternshipGradeServiceImpl internshipGradeService;
 
     @PostMapping("/getLoginIndex")
     public ResponseMessage<Object> getLoginIndex(@RequestBody Map<String, String> map) {
@@ -69,6 +69,7 @@ public class UserInfoController {
         return switch (role) {
             case "STUDENT" -> {
                 StudentInfoDto studentDto = mapper.convertValue(data, StudentInfoDto.class);
+                internshipGradeService.savaStudent(studentDto);
                 yield studentInfoService.saveStudentInfo(studentDto);
             }
             case "TEACHER" -> {

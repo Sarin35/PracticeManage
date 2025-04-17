@@ -5,6 +5,7 @@ import com.practice.practicemanage.pojo.StudentInfo;
 import com.practice.practicemanage.pojo.TeacherInfo;
 import com.practice.practicemanage.pojo.UnitUser;
 import com.practice.practicemanage.pojo.dto.InternshipGradeDto;
+import com.practice.practicemanage.pojo.dto.StudentInfoDto;
 import com.practice.practicemanage.repository.InternshipGradeRepository;
 import com.practice.practicemanage.repository.StudentInfoRepository;
 import com.practice.practicemanage.repository.TeacherInfoRepository;
@@ -12,7 +13,7 @@ import com.practice.practicemanage.repository.UnitUserRepository;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.InternshipGradeService;
 import com.practice.practicemanage.utils.LogUtil;
-import com.practice.practicemanage.utils.TypeConversionUtil;
+//import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,8 @@ public class InternshipGradeServiceImpl implements InternshipGradeService {
     private UnitUserRepository unitUserRepository;
     @Autowired
     private LogUtil logUtil;
-    @Autowired
-    private TypeConversionUtil typeConversionUtil;
+//    @Autowired
+//    private TypeConversionUtil typeConversionUtil;
 
     @Override
     public ResponseMessage<Object> getAllInfo(String phone) {
@@ -48,7 +49,7 @@ public class InternshipGradeServiceImpl implements InternshipGradeService {
 //            用学生手机号查询学生成绩
             InternshipGrade internshipGrade = (InternshipGrade) internshipGradeRepository.findByStudentPhone(phone);
 //            用公司名查询指导老师个人信息
-            UnitUser unitUsers = (UnitUser) unitUserRepository.findByPhone(studentInfo.getUnitPhone());
+            UnitUser unitUsers = unitUserRepository.findByPhone(studentInfo.getUnitPhone());
 
             Map<String, Object> map = new HashMap<>();
             map.put("studentInfo", studentInfo);
@@ -90,7 +91,7 @@ public class InternshipGradeServiceImpl implements InternshipGradeService {
                 studentData.put("internshipGrade", internshipGrade);
 
                 // 查询该学生对应的指导老师
-                UnitUser unitUser = (UnitUser) unitUserRepository.findByPhone(studentInfo.getUnitPhone());
+                UnitUser unitUser = unitUserRepository.findByPhone(studentInfo.getUnitPhone());
                 studentData.put("unitUser", unitUser);
 
                 // 加入到列表
@@ -171,6 +172,26 @@ public class InternshipGradeServiceImpl implements InternshipGradeService {
         } catch (Exception e) {
             logUtil.error(InternshipGrade.class, "获取公司实习人员名单失败", e);
             return ResponseMessage.error("获取公司实习人员名单失败");
+        }
+    }
+
+    @Override
+    public void savaStudent(StudentInfoDto studentDto) {
+        try {
+//            查询是否存在该学生
+            InternshipGrade internshipGrades = (InternshipGrade) internshipGradeRepository.findByStudentPhone(studentDto.getPhone());
+            InternshipGrade internshipGrade = new InternshipGrade();
+//            如果存在该学生，则更新该学生信息
+            if (internshipGrades != null) {
+                internshipGrade.setId(internshipGrades.getId());
+            }
+//            如果不存在该学生，则新增该学生信息
+            internshipGrade.setStudentPhone(studentDto.getPhone());
+            internshipGrade.setTeacherPhone(studentDto.getTeacherPhone());
+            internshipGrade.setStatus((byte) 1);
+            internshipGradeRepository.save(internshipGrade);
+        } catch (Exception e) {
+            logUtil.error(InternshipGradeServiceImpl.class, "保存学生信息失败", e);
         }
     }
 }

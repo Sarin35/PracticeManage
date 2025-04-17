@@ -12,7 +12,7 @@ import com.practice.practicemanage.response.PaginatedResponse;
 import com.practice.practicemanage.response.ResponseMessage;
 import com.practice.practicemanage.service.AssignmentService;
 import com.practice.practicemanage.utils.LogUtil;
-import com.practice.practicemanage.utils.TypeConversionUtil;
+//import com.practice.practicemanage.utils.TypeConversionUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,8 +34,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     private TeacherInfoRepository teacherInfoRepository;
     @Autowired
     private StudentInfoRepository studentInfoRepository;
-    @Autowired
-    private TypeConversionUtil typeConversionUtil;
+//    @Autowired
+//    private TypeConversionUtil typeConversionUtil;
     @Autowired
     private LogUtil logUtil;
 
@@ -49,9 +49,18 @@ public class AssignmentServiceImpl implements AssignmentService {
 
                 System.out.println("byTeacherPhoneAndStatus1:"+byTeacherPhoneAndStatus1);
                 System.out.println("byStudentPhoneAndStatus3:"+byStudentPhoneAndStatus3);
-                if (byTeacherPhoneAndStatus1.isEmpty() || byStudentPhoneAndStatus3.isEmpty()) {
-                    return Collections.emptyList(); // 如果没有作业，直接返回 空列表， 如果返回 null，调用 .isEmpty() 会报错
+                if (byTeacherPhoneAndStatus1.isEmpty()) {
+                    return Collections.emptyList(); // 如果老师没有作业，直接返回 空列表， 如果返回 null，调用 .isEmpty() 会报错
                 }
+
+                if (byStudentPhoneAndStatus3.isEmpty()) {
+                    // 设置教师姓名
+                    // 将结果收集到新的列表
+                    return byTeacherPhoneAndStatus1.stream()
+                            .peek(assignment -> assignment.setTeacger(teacher)) // 设置教师姓名
+                            .toList(); // 如果学生没有作业，直接返回 老师发布的所有作业， 如果返回 null，调用 .isEmpty() 会报错
+                }
+
 // 2. 获取 byStudentPhoneAndStatus3 中所有的 title 并存入 Set 中
                 Set<String> completedTitles = byStudentPhoneAndStatus3.stream()
                         .map(Assignment::getTitle) // 获取作业的 title
