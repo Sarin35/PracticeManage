@@ -62,7 +62,7 @@ public interface UserService {
 
     ResponseMessage<Object> getRoles();
 
-    ResponseMessage<Object> getRolesDelete(Integer id);
+    ResponseMessage<Object> getRolesDelete(Integer id, Integer status);
 
     ResponseMessage<Object> getLoginIndex(String phone, String role);
 
@@ -75,4 +75,6 @@ public interface UserService {
     ResponseMessage<Object> findNoticesA();
 
     ResponseMessage<Object> findNoticesSys();
+
+    ResponseMessage<Object> getRolesSA();
 }

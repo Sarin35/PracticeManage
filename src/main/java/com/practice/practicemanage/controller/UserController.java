@@ -25,7 +25,7 @@ public class UserController {
 
 //    测试 --- 这里的数据实际上应该写入到service层
     @Autowired
-UserService userService;
+    UserService userService;
     @Autowired
     LogUtil logUtil;
 

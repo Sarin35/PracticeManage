@@ -211,7 +211,7 @@ public class LoginServiceImpl implements LoginService {
                 logUtil.info(LoginServiceImpl.class, "路由:"+ menuList);
                 return ResponseMessage.success("返回角色个人信息", map);
 
-            } else if (Objects.equals(role.getIdentity(), "TEACHER") || Objects.equals(role.getIdentity(), "UNIT") || Objects.equals(role.getIdentity(), "ADMINISTRATOR")) {
+            } else if (Objects.equals(role.getIdentity(), "TEACHER") || Objects.equals(role.getIdentity(), "UNIT") || Objects.equals(role.getIdentity(), "ADMINISTRATOR") || Objects.equals(role.getIdentity(), "SUPERADMINISTRATOR")) {
 
                 Map<String, Object> map = getMap(user, role, menuList, "NotTeacher");
                 logUtil.info(LoginServiceImpl.class, "路由:"+ menuList);
@@ -267,7 +267,7 @@ public class LoginServiceImpl implements LoginService {
             case 3:
                 map.put("avatar", "https://i.pinimg.com/736x/d3/ac/9b/d3ac9b50a6c82c97225e2f4dcb7ceb01.jpg");
                 break;
-            case 4:
+            case 4, 6:
                 map.put("avatar", "https://i.pinimg.com/736x/01/d4/6d/01d46d481a4ad3776839a2ad37f134d4.jpg");
                 break;
         }

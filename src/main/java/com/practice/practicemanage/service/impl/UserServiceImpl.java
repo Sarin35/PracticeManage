@@ -199,6 +199,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseMessage<Object> getRoles() {
         try {
+//            4 管理员开启 5 管理员关闭
             Collection<Byte> status = Arrays.asList((byte) 4, (byte) 5);
             List<User> userL = userRepository.findByStatusIn(status);
             if (userL == null) {
@@ -212,24 +213,43 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
     @Override
-    public ResponseMessage<Object> getRolesDelete(Integer id) {
+    public ResponseMessage<Object> getRolesSA() {
+        try {
+//            6 超级管理员开启 7 超级管理员关闭
+            Collection<Byte> status = Arrays.asList((byte) 6, (byte) 7);
+            List<User> userL = userRepository.findByStatusIn(status);
+            if (userL == null) {
+                return ResponseMessage.error("获取超级管理信息失败");
+            }
+
+            return ResponseMessage.success("获取超级管理员信息", userL);
+        } catch (Exception e) {
+            logUtil.error(UserServiceImpl.class, "获取超级管理信息失败", e);
+            return ResponseMessage.error("获取超级管理信息失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> getRolesDelete(Integer id, Integer status) {
         try {
             User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("用户不存在"));
             System.out.println("user: " + user);
-            if (user.getStatus() == 4) {
-                userRepository.updateStatusById(id, 5);
-            } else if (user.getStatus() == 5) {
-                userRepository.updateStatusById(id, 4);
-            } else {
-                logUtil.error(UserServiceImpl.class, "用户状态不正确");
-                return ResponseMessage.error("用户状态不正确");
-            }
+            userRepository.updateStatusById(id, status);
+//            if (user.getStatus() == 4) {
+//                userRepository.updateStatusById(id, 5);
+//            } else if (user.getStatus() == 5) {
+//                userRepository.updateStatusById(id, 4);
+//            } else {
+//                logUtil.error(UserServiceImpl.class, "用户状态不正确");
+//                return ResponseMessage.error("用户状态不正确");
+//            }
 //            userRepository.updateStatusToZeroById(id);
             return ResponseMessage.success("用户状态更新完毕");
         } catch (Exception e) {
-            logUtil.error(UserServiceImpl.class, "删除用户失败", e);
-            return ResponseMessage.error("删除用户失败");
+            logUtil.error(UserServiceImpl.class, "更新用户状态失败", e);
+            return ResponseMessage.error("更新用户状态失败");
         }
     }
 

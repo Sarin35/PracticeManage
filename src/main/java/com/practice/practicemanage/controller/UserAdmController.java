@@ -34,9 +34,16 @@ public class UserAdmController {
     @Autowired
     private SchoolServiceImpl schoolService;
 
+//    获取管理员信息
     @PostMapping("/getRoles")
     public ResponseMessage<Object> getRoles() {
         return userService.getRoles();
+    }
+
+//    获取超级管理员信息
+    @PostMapping("/getRolesSA")
+    public ResponseMessage<Object> getRolesSA() {
+        return userService.getRolesSA();
     }
 
     @PostMapping("/getTeacher")
@@ -65,8 +72,8 @@ public class UserAdmController {
     }
 
     @PostMapping("/getRolesDelete")
-    public ResponseMessage<Object> getRolesDelete(@RequestBody Map<String, Integer> id) {
-        return userService.getRolesDelete(id.get("id"));
+    public ResponseMessage<Object> getRolesDelete(@RequestBody Map<String, Integer> map) {
+        return userService.getRolesDelete(map.get("id"), map.get("status"));
     }
 
 //    学生和教师无法删除
