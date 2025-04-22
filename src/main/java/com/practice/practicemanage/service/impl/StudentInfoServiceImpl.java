@@ -62,6 +62,23 @@ public class StudentInfoServiceImpl implements StudentInfoService {
         }
     }
 
+    @Override
+    public List<String> findByName(String studentName) {
+        try {
+//            模糊查询
+            List<StudentInfo> studentInfos = studentInfoRepository.findByNameContaining(studentName);
+            if (studentInfos.isEmpty()) {
+                return List.of();
+            }
+            return studentInfos.stream()
+                    .map(StudentInfo::getPhone)
+                    .toList();
+        } catch (Exception e) {
+            logUtil.error(StudentInfoServiceImpl.class, "根据姓名查询学生信息失败", e);
+            return List.of();
+        }
+    }
+
     public ResponseMessage<Object> returnPage (Page<StudentInfo> studentInfoPage) {
         List<StudentInfo> pageContent = studentInfoPage.getContent();
 

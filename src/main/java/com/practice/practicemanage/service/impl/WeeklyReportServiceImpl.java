@@ -1,7 +1,6 @@
 package com.practice.practicemanage.service.impl;
 
 import com.practice.practicemanage.pojo.StudentInfo;
-import com.practice.practicemanage.pojo.TeacherInfo;
 import com.practice.practicemanage.pojo.WeeklyReport;
 import com.practice.practicemanage.pojo.dto.WeeklyReportDto;
 import com.practice.practicemanage.repository.StudentInfoRepository;
@@ -35,63 +34,44 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 
     @Override
     public ResponseMessage<Object> getMyWeekReport(String studentPhone, String teacherPhone, int page, int limit, byte status) {
-        if (status == 1 || status == 2) {
             try {
                 // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
                 Pageable pageable = PageRequest.of(page - 1, limit);
 
-                // 查询分页数据
-                Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.findByStudentPhoneAndTeacherPhoneAndStatus(studentPhone, teacherPhone, status, pageable);
+                Page<WeeklyReport> weeklyReportPage;
+                if (status == 1 || status == 2) {
+                    // 查询分页数据
+                    weeklyReportPage = weeklyReportRepository.findByStudentPhoneAndTeacherPhoneAndStatus(studentPhone, teacherPhone, status, pageable);
+                } else {
+                    // 查询分页数据
+                    weeklyReportPage = weeklyReportRepository.findByStudentPhoneAndTeacherPhoneAndStatusNot(studentPhone, teacherPhone, 0, pageable);
+                }
 
                 return returnPage(weeklyReportPage);
             } catch (Exception e) {
                 logUtil.error(WeeklyReport.class, "查询用户表失败", e);
                 return ResponseMessage.success("周志获取失败");
             }
-        } else {
-            try {
-                // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
-                Pageable pageable = PageRequest.of(page - 1, limit);
-
-                // 查询分页数据
-                Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.findByStudentPhoneAndTeacherPhoneAndStatusNot(studentPhone, teacherPhone, 0, pageable);
-
-                return returnPage(weeklyReportPage);
-            } catch (Exception e) {
-                logUtil.error(WeeklyReport.class, "查询用户表失败", e);
-                return ResponseMessage.success("周志获取失败");
-            }
-        }
     }
 
     @Override
     public ResponseMessage<Object> getMyWeekReports(String teacherPhone, int page, int limit, byte status) {
-        if (status == 1 || status == 2) {
-            try {
-                // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
-                Pageable pageable = PageRequest.of(page - 1, limit);
+        try {
+            // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
+            Pageable pageable = PageRequest.of(page - 1, limit);
 
+            Page<WeeklyReport> weeklyReportPage;
+            if (status == 1 || status == 2) {
                 // 查询分页数据
-                Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndStatus(teacherPhone, status, pageable);
-
-                return returnPage(weeklyReportPage);
-            } catch (Exception e) {
-                logUtil.error(WeeklyReport.class, "查询用户表失败", e);
-                return ResponseMessage.success("周志获取失败");
-            }
-        } else {
-            try {
-                // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
-                Pageable pageable = PageRequest.of(page - 1, limit);
-
+                weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndStatus(teacherPhone, status, pageable);
+            } else {
                 // 查询分页数据
-                Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndStatusNot(teacherPhone, (byte) 0, pageable);
-
-                return returnPage(weeklyReportPage);
-            } catch (Exception e) {
-                logUtil.error(WeeklyReport.class, "查询用户表失败", e);
-                return ResponseMessage.success("周志获取失败");
+                weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndStatusNot(teacherPhone, (byte) 0, pageable);
             }
+            return returnPage(weeklyReportPage);
+        } catch (Exception e) {
+            logUtil.error(WeeklyReport.class, "查询用户表失败", e);
+            return ResponseMessage.success("周志获取失败");
         }
     }
 
@@ -112,13 +92,21 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     }
 
     @Override
-    public ResponseMessage<Object> findByFilter(String studentPhone, String teacherPhone, Integer page, Integer limit, String title) {
+    public ResponseMessage<Object> findByFilter(String studentPhone, String teacherPhone, Integer page, Integer limit, String title, byte status) {
         try {
             // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
             Pageable pageable = PageRequest.of(page - 1, limit);
 
+            Page<WeeklyReport> weeklyReportPage;
+            if (status == 1 || status == 2) {
+                // 查询分页数据
+                weeklyReportPage = weeklyReportRepository.findByStudentPhoneAndTeacherPhoneAndTitleContainingAndStatus(studentPhone, teacherPhone, title, status, pageable);
+            } else {
+                // 查询分页数据
+                weeklyReportPage = weeklyReportRepository.findByStudentPhoneAndTeacherPhoneAndTitleContainingAndStatusNot(studentPhone, teacherPhone, title, status, pageable);
+            }
             // 查询分页数据
-            Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.searchByPhoneAndTitle(studentPhone, teacherPhone, title, pageable);
+//            Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.searchByPhoneAndTitle(studentPhone, teacherPhone, title, pageable);
 
             return returnPage(weeklyReportPage);
         } catch (Exception e) {
@@ -128,13 +116,20 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     }
 
     @Override
-    public ResponseMessage<Object> findByFilters(String teacherPhone, Integer page, Integer limit, String title) {
+    public ResponseMessage<Object> findByFilters(String teacherPhone, Integer page, Integer limit, String title, byte status) {
         try {
             // 创建 Pageable 对象，PageRequest.of() 用于设置分页参数，page 从0开始，limit是每页大小
             Pageable pageable = PageRequest.of(page - 1, limit);
 
-            // 查询分页数据
-            Page<WeeklyReport> weeklyReportPage = weeklyReportRepository.searchByPhoneAndTitles(teacherPhone, title, pageable);
+            Page<WeeklyReport> weeklyReportPage;
+            if (status == 1 || status == 2) {
+                // 查询分页数据
+                weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndTitleContainingAndStatus(teacherPhone, title, status, pageable);
+            } else {
+                // 查询分页数据
+                weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndTitleContainingAndStatusNot(teacherPhone, title, (byte) 0, pageable);
+            }
+//                    weeklyReportRepository.searchByPhoneAndTitles(teacherPhone, title, pageable);
 
             return returnPage(weeklyReportPage);
         } catch (Exception e) {
@@ -142,6 +137,45 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
             return ResponseMessage.success("查询失败");
         }
     }
+
+    @Override
+    public ResponseMessage<Object> findByStudentName(String teacherPhone, Integer page, Integer limit, List<String> studentInfos, byte status) {
+        try {
+            Page<WeeklyReport> WeekRM;
+            if (status == 1 || status == 2) {
+                // 查询分页数据
+                WeekRM = weeklyReportRepository.findByTeacherPhoneAndStatusAndStudentPhoneIn(teacherPhone, status, studentInfos, PageRequest.of(page - 1, limit));
+            } else {
+                // 查询分页数据
+                WeekRM = weeklyReportRepository.findByTeacherPhoneAndStatusNotAndStudentPhoneIn(teacherPhone, (byte)0, studentInfos, PageRequest.of(page - 1, limit));
+            }
+
+            return returnPage(WeekRM);
+        } catch (Exception e) {
+            logUtil.error(WeeklyReport.class, "查询失败", e);
+            return ResponseMessage.success("查询失败");
+        }
+    }
+
+    @Override
+    public ResponseMessage<Object> findByTitleAndName(String teacherPhone, Integer page, Integer limit, String title, List<String> studentInfos, byte status) {
+        try {
+            System.out.println("获取的参数：teacherPhone:->>>>"+teacherPhone+"title:->>>>"+title+"studentInfos:->>>>"+studentInfos+"status:->>>>"+status);
+            Page<WeeklyReport> weeklyReportPage;
+            if (status == 1 || status == 2) {
+                // 查询分页数据
+                weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndTitleContainingAndStudentPhoneInAndStatus(teacherPhone, title, studentInfos, status, PageRequest.of(page - 1, limit));
+            } else {
+                // 查询分页数据
+                weeklyReportPage = weeklyReportRepository.findByTeacherPhoneAndTitleContainingAndStudentPhoneInAndStatusNot(teacherPhone, title, studentInfos, status, PageRequest.of(page - 1, limit));
+            }
+            return returnPage(weeklyReportPage);
+        } catch (Exception e) {
+            logUtil.error(WeeklyReport.class, "标题关联姓名查询失败", e);
+            return ResponseMessage.success("标题关联姓名查询失败");
+        }
+    }
+
 
     @Override
     public ResponseMessage<Object> weekSava(WeeklyReportDto weeklyReportDto) {
